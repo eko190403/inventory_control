@@ -50,8 +50,8 @@ function App() {
         // raw: false ensures dates are parsed as strings instead of Excel date numbers
         const dataJson = utils.sheet_to_json(ws, { raw: false });
         
-        // Append new data to existing data
-        setData(prev => [...prev, ...dataJson]);
+        // Replace existing data with new data
+        setData(dataJson);
         
         // Reset file input
         if (fileInputRef.current) {
