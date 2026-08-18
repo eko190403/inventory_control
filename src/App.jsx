@@ -116,87 +116,89 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="app-header" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+      <header className="app-header">
         <div>
-          <h1 className="app-title text-gradient">Data Dashboard</h1>
-          <p className="app-subtitle">Logistics & Goods Receipt Monitoring</p>
+          <h1 className="app-title text-gradient">Logistics Dashboard</h1>
+          <p className="app-subtitle">Goods Receipt & Inventory Monitoring System</p>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        <div className="toolbar glass-panel">
           {/* Upload Button */}
-          <div style={{ background: 'var(--bg-card)', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center' }}>
-            <input 
-              type="file" 
-              accept=".xlsx, .xls, .csv" 
-              style={{ display: 'none' }} 
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-            />
-            <button 
-              className="btn btn-primary"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <UploadCloud size={18} />
-              <span>Add Excel Data</span>
-            </button>
-          </div>
+          <input 
+            type="file" 
+            accept=".xlsx, .xls, .csv" 
+            style={{ display: 'none' }} 
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+          />
+          <button 
+            className="btn btn-primary"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <UploadCloud size={18} />
+            <span>Upload Data</span>
+          </button>
+
+          <div style={{ width: '1px', height: '24px', background: 'var(--border-strong)', margin: '0 0.5rem' }}></div>
 
           {/* Filters */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-card)', padding: '0.75rem 1rem', borderRadius: '12px', border: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
+          <div className="input-group">
+            <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
+            <select 
+              value={filterMode} 
+              onChange={e => { setFilterMode(e.target.value); setStartDate(''); setEndDate(''); setMonthValue(''); }}
+              style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '0.2rem' }}
+            >
+              <option value="range" style={{ background: 'var(--bg-card)' }}>Range Date</option>
+              <option value="month" style={{ background: 'var(--bg-card)' }}>By Month</option>
+            </select>
+          </div>
+          
+          {filterMode === 'range' ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Calendar size={18} style={{ color: 'var(--text-secondary)' }} />
-              <select 
-                value={filterMode} 
-                onChange={e => { setFilterMode(e.target.value); setStartDate(''); setEndDate(''); setMonthValue(''); }}
-                style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '0.4rem', borderRadius: '6px', outline: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
-              >
-                <option value="range">Date Range</option>
-                <option value="month">By Month</option>
-              </select>
-            </div>
-            
-            <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }}></div>
-            
-            {filterMode === 'range' ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div className="input-group">
                 <input 
                   type="date" 
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
                   className="search-input"
-                  style={{ padding: '0.4rem', width: 'auto', background: 'rgba(0,0,0,0.2)' }}
+                  style={{ padding: '0', background: 'transparent' }}
                   title="Start Date"
                 />
-                <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>to</span>
+              </div>
+              <span style={{ color: 'var(--text-secondary)' }}>-</span>
+              <div className="input-group">
                 <input 
                   type="date" 
                   value={endDate}
                   onChange={e => setEndDate(e.target.value)}
                   className="search-input"
-                  style={{ padding: '0.4rem', width: 'auto', background: 'rgba(0,0,0,0.2)' }}
+                  style={{ padding: '0', background: 'transparent' }}
                   title="End Date"
                 />
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className="input-group">
               <input 
                 type="month" 
                 value={monthValue}
                 onChange={e => setMonthValue(e.target.value)}
                 className="search-input"
-                style={{ padding: '0.4rem', width: 'auto', background: 'rgba(0,0,0,0.2)' }}
+                style={{ padding: '0', background: 'transparent' }}
               />
-            )}
+            </div>
+          )}
 
-            {(startDate || endDate || monthValue) && (
-              <button 
-                onClick={() => { setStartDate(''); setEndDate(''); setMonthValue(''); }}
-                style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.25rem' }}
-                title="Clear Filter"
-              >
-                <X size={18} />
-              </button>
-            )}
-          </div>
+          {(startDate || endDate || monthValue) && (
+            <button 
+              onClick={() => { setStartDate(''); setEndDate(''); setMonthValue(''); }}
+              className="icon-button danger"
+              title="Clear Filter"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
       </header>
 

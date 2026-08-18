@@ -53,7 +53,7 @@ export default function DataTable({ data }) {
         </div>
       </div>
 
-      <div className="table-container">
+      <div className="table-wrapper">
         <table className="data-table">
           <thead>
             <tr>
@@ -67,30 +67,48 @@ export default function DataTable({ data }) {
             </tr>
           </thead>
           <tbody>
-            {currentData.length > 0 ? currentData.map((row, idx) => (
-              <tr key={idx}>
-                <td style={{ fontWeight: 500 }}>{row['TMR Number'] || '-'}</td>
-                <td style={{ color: 'var(--accent-color)' }}>{row['Material'] || '-'}</td>
-                <td style={{ maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={row['Short Text']}>
-                  {row['Short Text'] || '-'}
-                </td>
-                <td>{row['Destination.1'] || '-'}</td>
-                <td>{row['Quantity TMR'] || 0}</td>
-                <td>
-                  <span className={`badge ${row['Status TMR'] === 'Delivered' ? 'success' : 'neutral'}`}>
-                    {row['Status TMR'] || 'Unknown'}
-                  </span>
-                </td>
-                <td>
-                  <span className={`badge ${row['Status Keterangan GR'] === 'Sudah GR' ? 'success' : row['Status Keterangan GR'] === 'Belum GR' ? 'warning' : 'neutral'}`}>
-                    {row['Status Keterangan GR'] || '-'}
-                  </span>
-                </td>
-              </tr>
-            )) : (
+            {currentData.length > 0 ? currentData.map((row, idx) => {
+              // Determine Status TMR Badge
+              const statusTmr = row['Status TMR'] || 'Unknown';
+              let badgeTmrClass = 'neutral';
+              if (statusTmr === 'Delivered') badgeTmrClass = 'success';
+              else if (statusTmr === 'On Process') badgeTmrClass = 'info';
+              else if (statusTmr === 'Dispatch') badgeTmrClass = 'warning';
+
+              // Determine Status GR Badge
+              const statusGr = row['Status Keterangan GR'] || '-';
+              let badgeGrClass = 'neutral';
+              if (statusGr === 'Sudah GR') badgeGrClass = 'success';
+              else if (statusGr === 'Belum GR') badgeGrClass = 'warning';
+
+              return (
+                <tr key={idx}>
+                  <td style={{ fontWeight: 600 }}>{row['TMR Number'] || '-'}</td>
+                  <td style={{ color: 'var(--brand-blue)' }}>{row['Material'] || '-'}</td>
+                  <td style={{ maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={row['Short Text']}>
+                    {row['Short Text'] || '-'}
+                  </td>
+                  <td>{row['Destination.1'] || '-'}</td>
+                  <td style={{ fontWeight: 500 }}>{row['Quantity TMR'] || 0}</td>
+                  <td>
+                    <span className={`badge ${badgeTmrClass}`}>
+                      {statusTmr}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`badge ${badgeGrClass}`}>
+                      {statusGr}
+                    </span>
+                  </td>
+                </tr>
+              );
+            }) : (
               <tr>
-                <td colSpan="7" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
-                  No records found matching "{searchTerm}"
+                <td colSpan="7" style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                    <Search size={32} style={{ opacity: 0.5 }} />
+                    <p>No records found matching "{searchTerm}"</p>
+                  </div>
                 </td>
               </tr>
             )}
