@@ -142,7 +142,7 @@ function App() {
           <div style={{ width: '1px', height: '24px', background: 'var(--border-strong)', margin: '0 0.5rem' }}></div>
 
           {/* Filters */}
-          <div className="input-group">
+          <div className="input-group date-group">
             <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
             <select 
               value={filterMode} 
@@ -156,36 +156,36 @@ function App() {
           
           {filterMode === 'range' ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div className="input-group">
+              <div className="input-group date-group">
                 <input 
                   type="date" 
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
-                  className="search-input"
-                  style={{ padding: '0', background: 'transparent' }}
+                  className="input-field date-input"
+                  style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
                   title="Start Date"
                 />
               </div>
               <span style={{ color: 'var(--text-secondary)' }}>-</span>
-              <div className="input-group">
+              <div className="input-group date-group">
                 <input 
                   type="date" 
                   value={endDate}
                   onChange={e => setEndDate(e.target.value)}
-                  className="search-input"
-                  style={{ padding: '0', background: 'transparent' }}
+                  className="input-field date-input"
+                  style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
                   title="End Date"
                 />
               </div>
             </div>
           ) : (
-            <div className="input-group">
+            <div className="input-group date-group">
               <input 
                 type="month" 
                 value={monthValue}
                 onChange={e => setMonthValue(e.target.value)}
-                className="search-input"
-                style={{ padding: '0', background: 'transparent' }}
+                className="input-field date-input"
+                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
               />
             </div>
           )}

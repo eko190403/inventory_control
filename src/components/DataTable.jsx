@@ -62,7 +62,7 @@ export default function DataTable({ data }) {
             <select 
               value={statusFilter} 
               onChange={handleFilterChange}
-              className="input-field select-field"
+              className="input-field select-field with-icon"
             >
               <option value="All">All Status GR</option>
               <option value="Sudah GR">Sudah GR</option>
