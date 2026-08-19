@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Filter, Database } from 'lucide-react';
 
 export default function DataTable({ data }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,12 +10,10 @@ export default function DataTable({ data }) {
   const filteredData = useMemo(() => {
     let result = data;
     
-    // Apply Status GR Filter
     if (statusFilter !== 'All') {
       result = result.filter(item => item['Status Keterangan GR'] === statusFilter);
     }
 
-    // Apply Search
     if (searchTerm) {
       const lowerSearch = searchTerm.toLowerCase();
       result = result.filter(item => {
@@ -23,12 +21,10 @@ export default function DataTable({ data }) {
         const pd = (item['Purchasing Document'] || '').toString().toLowerCase();
         const material = (item['Material'] || '').toString().toLowerCase();
         const text = (item['Short Text'] || '').toString().toLowerCase();
-        const dest = (item['Destination.1'] || '').toString().toLowerCase();
         return tmr.includes(lowerSearch) || 
                pd.includes(lowerSearch) ||
                material.includes(lowerSearch) || 
-               text.includes(lowerSearch) ||
-               dest.includes(lowerSearch);
+               text.includes(lowerSearch);
       });
     }
 
@@ -53,45 +49,34 @@ export default function DataTable({ data }) {
   };
 
   return (
-    <div className="glass-card" style={{ padding: '2rem' }}>
-      <div className="flex-between" style={{ marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h2 style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+    <div style={{ marginTop: '3rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.5rem' }}>
+          <Database className="text-gradient" />
           Data Records
-          <span className="badge neutral">{filteredData.length}</span>
+          <span className="badge neutral" style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }}>{filteredData.length.toLocaleString()} Total</span>
         </h2>
         
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          {/* Status GR Filter */}
+        <div className="controls-bar">
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <Filter size={16} style={{ position: 'absolute', left: '0.75rem', color: 'var(--text-secondary)' }} />
             <select 
               value={statusFilter} 
               onChange={handleFilterChange}
-              style={{
-                background: 'rgba(15, 17, 21, 0.6)',
-                border: '1px solid var(--border-color)',
-                color: 'var(--text-primary)',
-                padding: '0.75rem 1rem 0.75rem 2.25rem',
-                borderRadius: '8px',
-                fontFamily: 'Inter, sans-serif',
-                appearance: 'none',
-                minWidth: '150px',
-                cursor: 'pointer'
-              }}
+              className="input-field select-field"
             >
               <option value="All">All Status GR</option>
               <option value="Sudah GR">Sudah GR</option>
               <option value="Belum GR">Belum GR</option>
             </select>
+            <Filter size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
           </div>
 
-          {/* Search Input */}
-          <div className="search-container" style={{ minWidth: '250px' }}>
-            <Search className="search-icon" size={18} />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', minWidth: '280px' }}>
+            <Search size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
             <input 
               type="text" 
-              className="search-input" 
-              placeholder="Search by TMR, Pur.Doc, Material..." 
+              className="input-field" 
+              placeholder="Search TMR, Pur.Doc, Material..." 
               value={searchTerm}
               onChange={handleSearch}
             />
@@ -103,7 +88,7 @@ export default function DataTable({ data }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>TMR Number</th>
+              <th style={{ minWidth: '120px' }}>TMR Number</th>
               <th>Purchasing Doc</th>
               <th>Material</th>
               <th>Short Text</th>
@@ -114,14 +99,12 @@ export default function DataTable({ data }) {
           </thead>
           <tbody>
             {currentData.length > 0 ? currentData.map((row, idx) => {
-              // Determine Status TMR Badge
               const statusTmr = row['Status TMR'] || 'Unknown';
               let badgeTmrClass = 'neutral';
               if (statusTmr === 'Delivered') badgeTmrClass = 'success';
               else if (statusTmr === 'On Process') badgeTmrClass = 'info';
               else if (statusTmr === 'Dispatch') badgeTmrClass = 'warning';
 
-              // Determine Status GR Badge
               const statusGr = row['Status Keterangan GR'] || '-';
               let badgeGrClass = 'neutral';
               if (statusGr === 'Sudah GR') badgeGrClass = 'success';
@@ -129,31 +112,23 @@ export default function DataTable({ data }) {
 
               return (
                 <tr key={idx}>
-                  <td style={{ fontWeight: 600 }}>{row['TMR Number'] || '-'}</td>
-                  <td>{row['Purchasing Document'] || '-'}</td>
-                  <td style={{ color: 'var(--brand-blue)' }}>{row['Material'] || '-'}</td>
-                  <td style={{ maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={row['Short Text']}>
+                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row['TMR Number'] || '-'}</td>
+                  <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{row['Purchasing Document'] || '-'}</td>
+                  <td style={{ color: 'var(--brand-blue)', fontWeight: 500 }}>{row['Material'] || '-'}</td>
+                  <td style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={row['Short Text']}>
                     {row['Short Text'] || '-'}
                   </td>
-                  <td>{row['Destination.1'] || '-'}</td>
-                  <td>
-                    <span className={`badge ${badgeTmrClass}`}>
-                      {statusTmr}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`badge ${badgeGrClass}`}>
-                      {statusGr}
-                    </span>
-                  </td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{row['Destination.1'] || '-'}</td>
+                  <td><span className={`badge ${badgeTmrClass}`}>{statusTmr}</span></td>
+                  <td><span className={`badge ${badgeGrClass}`}>{statusGr}</span></td>
                 </tr>
               );
             }) : (
               <tr>
-                <td colSpan="7" style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                    <Search size={32} style={{ opacity: 0.5 }} />
-                    <p>No records found matching your filters</p>
+                <td colSpan="7" style={{ textAlign: 'center', padding: '6rem 2rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                    <Search size={48} style={{ opacity: 0.2 }} />
+                    <p style={{ fontSize: '1.1rem' }}>No records found matching your filters</p>
                   </div>
                 </td>
               </tr>
@@ -162,25 +137,17 @@ export default function DataTable({ data }) {
         </table>
       </div>
 
-      <div className="flex-between" style={{ marginTop: '1.5rem' }}>
-        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Showing {currentData.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0} to {Math.min(currentPage * rowsPerPage, filteredData.length)} of {filteredData.length} records
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', padding: '0 0.5rem' }}>
+        <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+          Showing <strong style={{ color: 'var(--text-primary)' }}>{currentData.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0}</strong> to <strong style={{ color: 'var(--text-primary)' }}>{Math.min(currentPage * rowsPerPage, filteredData.length)}</strong> of <strong style={{ color: 'var(--text-primary)' }}>{filteredData.length.toLocaleString()}</strong> records
         </div>
         
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button 
-            className="btn" 
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(p => p - 1)}
-          >
-            <ChevronLeft size={16} /> Prev
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button className="btn" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>
+            <ChevronLeft size={18} /> Prev
           </button>
-          <button 
-            className="btn" 
-            disabled={currentPage === totalPages || totalPages === 0}
-            onClick={() => setCurrentPage(p => p + 1)}
-          >
-            Next <ChevronRight size={16} />
+          <button className="btn" disabled={currentPage === totalPages || totalPages === 0} onClick={() => setCurrentPage(p => p + 1)}>
+            Next <ChevronRight size={18} />
           </button>
         </div>
       </div>
