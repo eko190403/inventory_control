@@ -1,25 +1,39 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 
 export default function DataTable({ data }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 50;
 
   const filteredData = useMemo(() => {
-    if (!searchTerm) return data;
-    const lowerSearch = searchTerm.toLowerCase();
-    return data.filter(item => {
-      const tmr = (item['TMR Number'] || '').toString().toLowerCase();
-      const material = (item['Material'] || '').toString().toLowerCase();
-      const text = (item['Short Text'] || '').toString().toLowerCase();
-      const dest = (item['Destination.1'] || '').toString().toLowerCase();
-      return tmr.includes(lowerSearch) || 
-             material.includes(lowerSearch) || 
-             text.includes(lowerSearch) ||
-             dest.includes(lowerSearch);
-    });
-  }, [data, searchTerm]);
+    let result = data;
+    
+    // Apply Status GR Filter
+    if (statusFilter !== 'All') {
+      result = result.filter(item => item['Status Keterangan GR'] === statusFilter);
+    }
+
+    // Apply Search
+    if (searchTerm) {
+      const lowerSearch = searchTerm.toLowerCase();
+      result = result.filter(item => {
+        const tmr = (item['TMR Number'] || '').toString().toLowerCase();
+        const pd = (item['Purchasing Document'] || '').toString().toLowerCase();
+        const material = (item['Material'] || '').toString().toLowerCase();
+        const text = (item['Short Text'] || '').toString().toLowerCase();
+        const dest = (item['Destination.1'] || '').toString().toLowerCase();
+        return tmr.includes(lowerSearch) || 
+               pd.includes(lowerSearch) ||
+               material.includes(lowerSearch) || 
+               text.includes(lowerSearch) ||
+               dest.includes(lowerSearch);
+      });
+    }
+
+    return result;
+  }, [data, searchTerm, statusFilter]);
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   
@@ -33,23 +47,55 @@ export default function DataTable({ data }) {
     setCurrentPage(1);
   };
 
+  const handleFilterChange = (e) => {
+    setStatusFilter(e.target.value);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="glass-card" style={{ padding: '2rem' }}>
-      <div className="flex-between" style={{ marginBottom: '1.5rem' }}>
+      <div className="flex-between" style={{ marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           Data Records
           <span className="badge neutral">{filteredData.length}</span>
         </h2>
         
-        <div className="search-container">
-          <Search className="search-icon" size={18} />
-          <input 
-            type="text" 
-            className="search-input" 
-            placeholder="Search by TMR, Material, or Dest..." 
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          {/* Status GR Filter */}
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <Filter size={16} style={{ position: 'absolute', left: '0.75rem', color: 'var(--text-secondary)' }} />
+            <select 
+              value={statusFilter} 
+              onChange={handleFilterChange}
+              style={{
+                background: 'rgba(15, 17, 21, 0.6)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-primary)',
+                padding: '0.75rem 1rem 0.75rem 2.25rem',
+                borderRadius: '8px',
+                fontFamily: 'Inter, sans-serif',
+                appearance: 'none',
+                minWidth: '150px',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="All">All Status GR</option>
+              <option value="Sudah GR">Sudah GR</option>
+              <option value="Belum GR">Belum GR</option>
+            </select>
+          </div>
+
+          {/* Search Input */}
+          <div className="search-container" style={{ minWidth: '250px' }}>
+            <Search className="search-icon" size={18} />
+            <input 
+              type="text" 
+              className="search-input" 
+              placeholder="Search by TMR, Pur.Doc, Material..." 
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
         </div>
       </div>
 
@@ -58,10 +104,10 @@ export default function DataTable({ data }) {
           <thead>
             <tr>
               <th>TMR Number</th>
+              <th>Purchasing Doc</th>
               <th>Material</th>
               <th>Short Text</th>
               <th>Destination</th>
-              <th>Qty TMR</th>
               <th>Status TMR</th>
               <th>Status GR</th>
             </tr>
@@ -84,12 +130,12 @@ export default function DataTable({ data }) {
               return (
                 <tr key={idx}>
                   <td style={{ fontWeight: 600 }}>{row['TMR Number'] || '-'}</td>
+                  <td>{row['Purchasing Document'] || '-'}</td>
                   <td style={{ color: 'var(--brand-blue)' }}>{row['Material'] || '-'}</td>
                   <td style={{ maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={row['Short Text']}>
                     {row['Short Text'] || '-'}
                   </td>
                   <td>{row['Destination.1'] || '-'}</td>
-                  <td style={{ fontWeight: 500 }}>{row['Quantity TMR'] || 0}</td>
                   <td>
                     <span className={`badge ${badgeTmrClass}`}>
                       {statusTmr}
@@ -107,7 +153,7 @@ export default function DataTable({ data }) {
                 <td colSpan="7" style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                     <Search size={32} style={{ opacity: 0.5 }} />
-                    <p>No records found matching "{searchTerm}"</p>
+                    <p>No records found matching your filters</p>
                   </div>
                 </td>
               </tr>
