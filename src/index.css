@@ -293,3 +293,94 @@ h1, h2, h3, h4 {
 input[type="date"], input[type="month"], .date-input {
   color: #ffffff !important;
 }
+
+
+/* ==============================================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ============================================================== */
+
+@media (max-width: 768px) {
+  /* Layout adjustments */
+  .app-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .glass-card {
+    padding: 1.5rem;
+  }
+  
+  /* Typography scaling */
+  h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  .app-title {
+    font-size: 1.75rem !important;
+  }
+  
+  /* Summary Cards */
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .glass-card > div > div > div[style*="font-size: 3.5rem"] {
+    font-size: 2.5rem !important;
+  }
+  
+  /* Controls and Filters */
+  .controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .controls-bar > div {
+    width: 100%;
+    min-width: 100% !important;
+  }
+  
+  .input-field {
+    width: 100%;
+  }
+
+  /* Date Range Inputs in Header */
+  .app-header .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  
+  .input-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Table padding */
+  .data-table td, .data-table thead th {
+    padding: 0.8rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Even smaller devices */
+  .app-container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .glass-card {
+    border-radius: 12px;
+  }
+  
+  .icon-container {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .icon-container svg {
+    width: 24px;
+    height: 24px;
+  }
+}
