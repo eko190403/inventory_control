@@ -4,7 +4,6 @@ import { read, utils, writeFile } from 'xlsx';
 import { supabase } from './supabaseClient';
 
 import SummaryCards from './components/SummaryCards';
-import DashboardCharts from './components/DashboardCharts';
 import DataTable from './components/DataTable';
 
 function App() {
