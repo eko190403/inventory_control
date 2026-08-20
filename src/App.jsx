@@ -52,7 +52,10 @@ function App() {
           'Status Keterangan GR': row.status_keterangan_gr,
           'Destination.1': row.destination_1,
           'Shipping Date': row.shipping_date,
-          'GR Date TMR': row.gr_date_tmr
+          'GR Date TMR': row.gr_date_tmr,
+          'Matl. Group': row.material_type,
+          'Quantity TMR': row.quantity_tmr,
+          'Material Document': row.material_document
         }));
         
         setData(mappedData);
@@ -106,7 +109,11 @@ function App() {
         }
 
         // Map keys to Supabase format (ONLY ALLOWED KEYS to prevent insert crash)
-        const allowedKeys = ['tmr_number', 'purchasing_document', 'material', 'short_text', 'status_tmr', 'status_keterangan_gr', 'destination_1', 'shipping_date', 'gr_date_tmr'];
+        const allowedKeys = [
+          'tmr_number', 'purchasing_document', 'material', 'short_text', 'status_tmr', 
+          'status_keterangan_gr', 'destination_1', 'shipping_date', 'gr_date_tmr',
+          'material_type', 'material_document', 'quantity_tmr'
+        ];
         
         const cleanedData = dataJson.map(row => {
           const cleanedRow = {};
@@ -119,16 +126,26 @@ function App() {
              if (cleanKey === 'destination' && !row['Destination.1']) {
                  cleanedRow['destination_1'] = String(row[key]);
              }
+             // Mapping Matl.Group to material_type
+             if (cleanKey === 'matl_group') {
+                 cleanedRow['material_type'] = String(row[key]).trim();
+             }
+             // Parsing Quantity TMR (take number before comma)
+             if (cleanKey === 'quantity_tmr') {
+                 let rawQty = String(row[key]);
+                 if (rawQty.includes(',')) {
+                     rawQty = rawQty.split(',')[0];
+                 }
+                 cleanedRow['quantity_tmr'] = rawQty.trim();
+             }
           }
           
-          // AUTO-CALCULATE 'Status Keterangan GR' if missing
-          if (!cleanedRow['status_keterangan_gr']) {
-             // Logic: If QTY GR > 0 or Material Document exists, it's SUDAH GR
-             if (row['QTY GR'] || row['Material Document'] || row['GR Date TMR']) {
-                 cleanedRow['status_keterangan_gr'] = 'SUDAH GR';
-             } else {
-                 cleanedRow['status_keterangan_gr'] = 'BELUM GR';
-             }
+          // AUTO-CALCULATE 'Status Keterangan GR'
+          // Logic: If Material Document exists, it's SUDAH GR
+          if (row['Material Document']) {
+              cleanedRow['status_keterangan_gr'] = 'SUDAH GR';
+          } else {
+              cleanedRow['status_keterangan_gr'] = 'BELUM GR';
           }
           
           return cleanedRow;
@@ -186,27 +203,41 @@ function App() {
   const filteredData = useMemo(() => {
     if (!data.length) return [];
     
-    if (filterMode === 'range' && (startDate || endDate)) {
-      return data.filter(item => {
-        const dStr = item['Shipping Date'] || item['GR Date TMR'] || ''; 
+    return data.filter(item => {
+      let valid = true;
+      
+      // Filter GR Date TMR Range
+      if (startDate || endDate) {
+        const dStr = item['GR Date TMR'] || ''; 
         const itemDate = dStr.substring(0, 10);
-        if (!itemDate) return false;
-
-        let valid = true;
+        if (!itemDate) valid = false;
         if (startDate && itemDate < startDate) valid = false;
         if (endDate && itemDate > endDate) valid = false;
-        
-        return valid;
-      });
-    } else if (filterMode === 'month' && monthValue) {
-      return data.filter(item => {
-        const d = item['Shipping Date'] || item['GR Date TMR'] || ''; 
-        return d.startsWith(monthValue);
-      });
-    }
-    
-    return data;
-  }, [data, filterMode, startDate, endDate, monthValue]);
+      }
+      
+      // Filter Status TMR
+      if (statusFilter && item['Status TMR'] !== statusFilter) {
+        valid = false;
+      }
+      
+      // Filter Matl. Group
+      if (matlGroupFilter) {
+         const matl = item['Matl. Group'] || '';
+         if (!matl.toLowerCase().includes(matlGroupFilter.toLowerCase())) {
+             valid = false;
+         }
+      }
+
+      return valid;
+    });
+  }, [data, startDate, endDate, statusFilter, matlGroupFilter]);
+  
+  // Unique Options for Status TMR
+  const statusOptions = useMemo(() => {
+     const statuses = data.map(d => d['Status TMR']).filter(Boolean);
+     return [...new Set(statuses)];
+  }, [data]);
+
 
   if (loading) {
     return (
@@ -264,63 +295,65 @@ function App() {
           <div style={{ width: '1px', height: '24px', background: 'var(--border-strong)', margin: '0 0.5rem' }}></div>
 
           {/* Filters */}
-          <div className="input-group date-group">
-            <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
-            <select 
-              value={filterMode} 
-              onChange={e => { setFilterMode(e.target.value); setStartDate(''); setEndDate(''); setMonthValue(''); }}
-              style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '0.2rem' }}
-            >
-              <option value="range" style={{ background: 'var(--bg-card)' }}>Range Date</option>
-              <option value="month" style={{ background: 'var(--bg-card)' }}>By Month</option>
-            </select>
-          </div>
-          
-          {filterMode === 'range' ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div className="input-group date-group">
-                <input 
-                  type="date" 
-                  value={startDate}
-                  onChange={e => setStartDate(e.target.value)}
-                  className="input-field date-input"
-                  style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
-                  title="Start Date"
-                />
-              </div>
-              <span style={{ color: 'var(--text-secondary)' }}>-</span>
-              <div className="input-group date-group">
-                <input 
-                  type="date" 
-                  value={endDate}
-                  onChange={e => setEndDate(e.target.value)}
-                  className="input-field date-input"
-                  style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
-                  title="End Date"
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="input-group date-group">
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {/* GR Date Range Filter */}
+            <div className="input-group date-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
               <input 
-                type="month" 
-                value={monthValue}
-                onChange={e => setMonthValue(e.target.value)}
+                type="date" 
+                value={startDate}
+                onChange={e => setStartDate(e.target.value)}
                 className="input-field date-input"
                 style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
+                title="Start GR Date"
+              />
+              <span style={{ color: 'var(--text-secondary)' }}>-</span>
+              <input 
+                type="date" 
+                value={endDate}
+                onChange={e => setEndDate(e.target.value)}
+                className="input-field date-input"
+                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
+                title="End GR Date"
               />
             </div>
-          )}
 
-          {(startDate || endDate || monthValue) && (
-            <button 
-              onClick={() => { setStartDate(''); setEndDate(''); setMonthValue(''); }}
-              className="icon-button danger"
-              title="Clear Filter"
+            {/* Status TMR Filter */}
+            <select 
+              value={statusFilter} 
+              onChange={e => setStatusFilter(e.target.value)}
+              className="input-group"
+              style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
             >
-              <X size={18} />
-            </button>
-          )}
+              <option value="">Semua Status TMR</option>
+              {statusOptions.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+
+            {/* Matl Group Filter */}
+            <select 
+              value={matlGroupFilter} 
+              onChange={e => setMatlGroupFilter(e.target.value)}
+              className="input-group"
+              style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
+            >
+              <option value="">Semua Matl Group</option>
+              <option value="Inventory">Inventory</option>
+              <option value="Expense">Expense (OB)</option>
+            </select>
+
+            {(startDate || endDate || statusFilter || matlGroupFilter) && (
+              <button 
+                onClick={() => { setStartDate(''); setEndDate(''); setStatusFilter(''); setMatlGroupFilter(''); }}
+                className="icon-button danger"
+                title="Clear Filters"
+                style={{ padding: '0.4rem' }}
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
       </header>
 

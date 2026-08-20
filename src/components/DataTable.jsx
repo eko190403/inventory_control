@@ -152,19 +152,14 @@ export default function DataTable({ data }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th onClick={() => requestSort('TMR Number')} style={{ cursor: 'pointer', minWidth: '130px', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  TMR Number {renderSortIcon('TMR Number')}
-                </div>
-              </th>
-              <th onClick={() => requestSort('Purchasing Document')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+              <th onClick={() => requestSort('Purchasing Document')} style={{ cursor: 'pointer', minWidth: '150px', userSelect: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   Purchasing Doc {renderSortIcon('Purchasing Document')}
                 </div>
               </th>
-              <th onClick={() => requestSort('Material')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+              <th onClick={() => requestSort('TMR Number')} style={{ cursor: 'pointer', minWidth: '130px', userSelect: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  Material {renderSortIcon('Material')}
+                  TMR Number {renderSortIcon('TMR Number')}
                 </div>
               </th>
               <th onClick={() => requestSort('Short Text')} style={{ cursor: 'pointer', userSelect: 'none' }}>
@@ -177,14 +172,9 @@ export default function DataTable({ data }) {
                   Destination {renderSortIcon('Destination.1')}
                 </div>
               </th>
-              <th onClick={() => requestSort('Status TMR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+              <th onClick={() => requestSort('Matl. Group')} style={{ cursor: 'pointer', userSelect: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  Status TMR {renderSortIcon('Status TMR')}
-                </div>
-              </th>
-              <th onClick={() => requestSort('Status Keterangan GR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  Status GR {renderSortIcon('Status Keterangan GR')}
+                  Matl. Group {renderSortIcon('Matl. Group')}
                 </div>
               </th>
             </tr>
@@ -204,15 +194,13 @@ export default function DataTable({ data }) {
 
               return (
                 <tr key={idx} onClick={() => setSelectedRow(row)} style={{ cursor: 'pointer' }}>
-                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row['TMR Number'] || '-'}</td>
                   <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{row['Purchasing Document'] || '-'}</td>
-                  <td style={{ color: 'var(--brand-blue)', fontWeight: 500 }}>{row['Material'] || '-'}</td>
-                  <td style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={row['Short Text']}>
+                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row['TMR Number'] || '-'}</td>
+                  <td style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--brand-blue)', fontWeight: 500 }} title={row['Short Text']}>
                     {row['Short Text'] || '-'}
                   </td>
                   <td style={{ color: 'var(--text-secondary)' }}>{row['Destination.1'] || '-'}</td>
-                  <td><span className={`badge ${badgeTmrClass}`}>{statusTmr}</span></td>
-                  <td><span className={`badge ${badgeGrClass}`}>{statusGr}</span></td>
+                  <td><span className="badge info">{row['Matl. Group'] || '-'}</span></td>
                 </tr>
               );
             }) : (
