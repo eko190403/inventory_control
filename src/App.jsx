@@ -361,7 +361,6 @@ function App() {
 
       <main>
         <SummaryCards data={filteredData} />
-        <DashboardCharts data={filteredData} />
         <DataTable data={filteredData} />
       </main>
     </div>
