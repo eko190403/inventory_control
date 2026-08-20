@@ -80,8 +80,12 @@ function App() {
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
         // Convert sheet to json
-        // raw: false ensures dates are parsed as strings instead of Excel date numbers
-        const dataJson = utils.sheet_to_json(ws, { raw: false });
+        let dataJson = utils.sheet_to_json(ws, { raw: false });
+        
+        // If it doesn't have the columns, try skipping 4 rows (SAP default export format)
+        if (dataJson.length > 0 && !('TMR Number' in dataJson[0])) {
+          dataJson = utils.sheet_to_json(ws, { raw: false, range: 4 });
+        }
         
         // Validation: Check if required columns exist
         if (dataJson.length > 0) {
