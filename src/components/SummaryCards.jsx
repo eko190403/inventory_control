@@ -43,7 +43,7 @@ export default function SummaryCards({ data }) {
           <div>
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Total Qty Sudah GR</h3>
             <div style={{ fontSize: '2.5rem', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1 }}>
-              {stats.sudahGR.toLocaleString()}
+              {stats.sudahGR.toLocaleString('id-ID')}
             </div>
           </div>
           <div className="icon-container" style={{ background: 'var(--status-success-bg)', color: 'var(--status-success)', width: '48px', height: '48px' }}>
@@ -58,7 +58,7 @@ export default function SummaryCards({ data }) {
           <div>
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Total Qty Belum GR</h3>
             <div style={{ fontSize: '2.5rem', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1 }}>
-              {stats.belumGR.toLocaleString()}
+              {stats.belumGR.toLocaleString('id-ID')}
             </div>
           </div>
           <div className="icon-container" style={{ background: 'var(--status-warning-bg)', color: 'var(--status-warning)', width: '48px', height: '48px' }}>
@@ -73,8 +73,8 @@ export default function SummaryCards({ data }) {
           <div>
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Inventory</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', marginTop: '0.5rem' }}>
-                <span style={{ fontSize: '0.9rem', color: 'var(--status-success)' }}>{stats.invSudahGR.toLocaleString()} Sudah GR</span>
-                <span style={{ fontSize: '0.9rem', color: 'var(--status-warning)' }}>{stats.invBelumGR.toLocaleString()} Belum GR</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--status-success)' }}>{stats.invSudahGR.toLocaleString('id-ID')} Sudah GR</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--status-warning)' }}>{stats.invBelumGR.toLocaleString('id-ID')} Belum GR</span>
             </div>
           </div>
           <div className="icon-container" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa', width: '48px', height: '48px' }}>
@@ -89,8 +89,8 @@ export default function SummaryCards({ data }) {
           <div>
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Expense (OB)</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', marginTop: '0.5rem' }}>
-                <span style={{ fontSize: '0.9rem', color: 'var(--status-success)' }}>{stats.expSudahGR.toLocaleString()} Sudah GR</span>
-                <span style={{ fontSize: '0.9rem', color: 'var(--status-warning)' }}>{stats.expBelumGR.toLocaleString()} Belum GR</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--status-success)' }}>{stats.expSudahGR.toLocaleString('id-ID')} Sudah GR</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--status-warning)' }}>{stats.expBelumGR.toLocaleString('id-ID')} Belum GR</span>
             </div>
           </div>
           <div className="icon-container" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#7dd3fc', width: '48px', height: '48px' }}>

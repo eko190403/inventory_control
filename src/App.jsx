@@ -130,11 +130,14 @@ function App() {
              if (cleanKey === 'matl_group') {
                  cleanedRow['material_type'] = String(row[key]).trim();
              }
-             // Parsing Quantity TMR (take number before comma)
+             // Parsing Quantity TMR (take number before comma or dot)
              if (cleanKey === 'quantity_tmr') {
                  let rawQty = String(row[key]);
                  if (rawQty.includes(',')) {
                      rawQty = rawQty.split(',')[0];
+                 }
+                 if (rawQty.includes('.')) {
+                     rawQty = rawQty.split('.')[0];
                  }
                  cleanedRow['quantity_tmr'] = rawQty.trim();
              }

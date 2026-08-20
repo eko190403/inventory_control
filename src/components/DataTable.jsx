@@ -104,7 +104,7 @@ export default function DataTable({ data }) {
         <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.5rem' }}>
           <Database className="text-gradient" />
           Data Records
-          <span className="badge neutral" style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }}>{filteredData.length.toLocaleString()} Total</span>
+          <span className="badge neutral" style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }}>{filteredData.length.toLocaleString('id-ID')} Total</span>
         </h2>
         
         <div className="controls-bar">
@@ -219,7 +219,7 @@ export default function DataTable({ data }) {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', padding: '0 0.5rem' }}>
         <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-          Showing <strong style={{ color: 'var(--text-primary)' }}>{currentData.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0}</strong> to <strong style={{ color: 'var(--text-primary)' }}>{Math.min(currentPage * rowsPerPage, filteredData.length)}</strong> of <strong style={{ color: 'var(--text-primary)' }}>{filteredData.length.toLocaleString()}</strong> records
+          Showing <strong style={{ color: 'var(--text-primary)' }}>{currentData.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0}</strong> to <strong style={{ color: 'var(--text-primary)' }}>{Math.min(currentPage * rowsPerPage, filteredData.length)}</strong> of <strong style={{ color: 'var(--text-primary)' }}>{filteredData.length.toLocaleString('id-ID')}</strong> records
         </div>
         
         <div style={{ display: 'flex', gap: '0.75rem' }}>
