@@ -15,10 +15,10 @@ function App() {
   const fileInputRef = useRef(null);
 
   // Filter state
-  const [filterMode, setFilterMode] = useState('range'); // 'range' or 'month'
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [monthValue, setMonthValue] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [matlGroupFilter, setMatlGroupFilter] = useState('');
 
   useEffect(() => {
     const fetchFromSupabase = async () => {
