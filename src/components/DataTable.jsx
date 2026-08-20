@@ -98,33 +98,6 @@ export default function DataTable({ data }) {
         </h2>
         
         <div className="controls-bar">
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <select 
-              value={statusFilter} 
-              onChange={handleFilterChange}
-              className="input-field select-field with-icon"
-            >
-              <option value="All">All Status GR</option>
-              <option value="Sudah GR">Sudah GR</option>
-              <option value="Belum GR">Belum GR</option>
-            </select>
-            <Filter size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
-          </div>
-          
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <select 
-              value={statusTmrFilter} 
-              onChange={handleTmrFilterChange}
-              className="input-field select-field with-icon"
-            >
-              <option value="All">All Status TMR</option>
-              <option value="Delivered">Delivered</option>
-              <option value="On Process">On Process</option>
-              <option value="Dispatch">Dispatch</option>
-            </select>
-            <Filter size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
-          </div>
-
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', minWidth: '250px' }}>
             <Search size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
             <input 
