@@ -79,13 +79,17 @@ function App() {
         const wb = read(arrayBuffer, { type: 'array' });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        // Convert sheet to json
-        let dataJson = utils.sheet_to_json(ws, { raw: false });
-        
-        // If it doesn't have the columns, try skipping 4 rows (SAP default export format)
-        if (dataJson.length > 0 && !('TMR Number' in dataJson[0])) {
-          dataJson = utils.sheet_to_json(ws, { raw: false, range: 4 });
+        // Convert sheet to json dynamically finding the header row
+        const rawDataArray = utils.sheet_to_json(ws, { header: 1 });
+        let headerRowIndex = 0;
+        for (let i = 0; i < Math.min(20, rawDataArray.length); i++) {
+          if (rawDataArray[i] && rawDataArray[i].includes('TMR Number')) {
+            headerRowIndex = i;
+            break;
+          }
         }
+        
+        const dataJson = utils.sheet_to_json(ws, { raw: false, range: headerRowIndex });
         
         // Validation: Check if required columns exist
         if (dataJson.length > 0) {
