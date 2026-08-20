@@ -105,12 +105,20 @@ function App() {
           return;
         }
 
-        // Map keys to Supabase format
+        // Map keys to Supabase format (ONLY ALLOWED KEYS to prevent insert crash)
+        const allowedKeys = ['tmr_number', 'purchasing_document', 'material', 'short_text', 'status_tmr', 'status_keterangan_gr', 'destination_1', 'shipping_date', 'gr_date_tmr'];
+        
         const cleanedData = dataJson.map(row => {
           const cleanedRow = {};
           for (const key in row) {
              const cleanKey = key.replace(/ /g, '_').replace(/\./g, '_').replace(/\//g, '_').toLowerCase();
-             cleanedRow[cleanKey] = String(row[key]);
+             if (allowedKeys.includes(cleanKey)) {
+                 cleanedRow[cleanKey] = String(row[key]);
+             }
+             // Fallback for destination
+             if (cleanKey === 'destination' && !row['Destination.1']) {
+                 cleanedRow['destination_1'] = String(row[key]);
+             }
           }
           return cleanedRow;
         });
@@ -128,6 +136,9 @@ function App() {
           const { error: insertError } = await supabase.from('inventory_records').insert(chunk);
           if (insertError) {
              console.error('Insert error chunk', i, insertError);
+             alert('Error menyimpan data: ' + insertError.message);
+             setLoading(false);
+             return; // abort
           }
         }
         
