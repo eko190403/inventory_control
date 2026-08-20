@@ -18,6 +18,7 @@ function App() {
   const [endDate, setEndDate] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [matlGroupFilter, setMatlGroupFilter] = useState('');
+  const [statusGrFilter, setStatusGrFilter] = useState('');
 
   useEffect(() => {
     const fetchFromSupabase = async () => {
@@ -211,14 +212,27 @@ function App() {
       // Filter GR Date TMR Range
       if (startDate || endDate) {
         const dStr = item['GR Date TMR'] || ''; 
-        const itemDate = dStr.substring(0, 10);
-        if (!itemDate) valid = false;
-        if (startDate && itemDate < startDate) valid = false;
-        if (endDate && itemDate > endDate) valid = false;
+        if (!dStr) {
+            valid = false;
+        } else {
+            // Convert '8/14/26' or similar to Date object
+            const itemDateObj = new Date(dStr);
+            if (isNaN(itemDateObj.getTime())) {
+                valid = false;
+            } else {
+                if (startDate && itemDateObj < new Date(startDate)) valid = false;
+                if (endDate && itemDateObj > new Date(endDate)) valid = false;
+            }
+        }
       }
       
       // Filter Status TMR
       if (statusFilter && item['Status TMR'] !== statusFilter) {
+        valid = false;
+      }
+      
+      // Filter Status GR
+      if (statusGrFilter && item['Status Keterangan GR'] !== statusGrFilter) {
         valid = false;
       }
       
@@ -232,7 +246,7 @@ function App() {
 
       return valid;
     });
-  }, [data, startDate, endDate, statusFilter, matlGroupFilter]);
+  }, [data, startDate, endDate, statusFilter, matlGroupFilter, statusGrFilter]);
   
   // Unique Options for Status TMR
   const statusOptions = useMemo(() => {
@@ -320,6 +334,18 @@ function App() {
               />
             </div>
 
+            {/* Status GR Filter */}
+            <select 
+              value={statusGrFilter} 
+              onChange={e => setStatusGrFilter(e.target.value)}
+              className="input-group"
+              style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
+            >
+              <option value="">Semua Status GR</option>
+              <option value="SUDAH GR">Sudah GR</option>
+              <option value="BELUM GR">Belum GR</option>
+            </select>
+
             {/* Status TMR Filter */}
             <select 
               value={statusFilter} 
@@ -345,9 +371,9 @@ function App() {
               <option value="Expense">Expense (OB)</option>
             </select>
 
-            {(startDate || endDate || statusFilter || matlGroupFilter) && (
+            {(startDate || endDate || statusFilter || matlGroupFilter || statusGrFilter) && (
               <button 
-                onClick={() => { setStartDate(''); setEndDate(''); setStatusFilter(''); setMatlGroupFilter(''); }}
+                onClick={() => { setStartDate(''); setEndDate(''); setStatusFilter(''); setMatlGroupFilter(''); setStatusGrFilter(''); }}
                 className="icon-button danger"
                 title="Clear Filters"
                 style={{ padding: '0.4rem' }}
