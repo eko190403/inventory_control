@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Calendar, X, UploadCloud } from 'lucide-react';
-import { read, utils } from 'xlsx';
+import { Calendar, X, UploadCloud, DownloadCloud } from 'lucide-react';
+import { read, utils, writeFile } from 'xlsx';
 import SummaryCards from './components/SummaryCards';
 import DashboardCharts from './components/DashboardCharts';
 import DataTable from './components/DataTable';
@@ -72,6 +72,17 @@ function App() {
     reader.readAsArrayBuffer(file);
   };
 
+  const handleExport = () => {
+    if (!filteredData.length) {
+      alert("No data to export");
+      return;
+    }
+    const ws = utils.json_to_sheet(filteredData);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Filtered Data");
+    writeFile(wb, "export_data.xlsx");
+  };
+
   const filteredData = useMemo(() => {
     if (!data.length) return [];
     
@@ -138,6 +149,16 @@ function App() {
           >
             <UploadCloud size={18} />
             <span>Upload Data</span>
+          </button>
+
+          <button 
+            className="btn"
+            style={{ background: 'var(--brand-purple)', color: '#fff', border: 'none', marginLeft: '0.5rem' }}
+            onClick={handleExport}
+            disabled={!filteredData.length}
+          >
+            <DownloadCloud size={18} />
+            <span>Export Data</span>
           </button>
 
           <div style={{ width: '1px', height: '24px', background: 'var(--border-strong)', margin: '0 0.5rem' }}></div>

@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronLeft, ChevronRight, Filter, Database } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Filter, Database, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 export default function DataTable({ data }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortConfig, setSortConfig] = useState(null);
   const rowsPerPage = 50;
 
   const filteredData = useMemo(() => {
@@ -28,8 +29,27 @@ export default function DataTable({ data }) {
       });
     }
 
+    if (sortConfig !== null) {
+      result = [...result].sort((a, b) => {
+        let valA = a[sortConfig.key];
+        let valB = b[sortConfig.key];
+        
+        // Handle null/undefined
+        if (valA == null) valA = '';
+        if (valB == null) valB = '';
+
+        if (valA < valB) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (valA > valB) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+
     return result;
-  }, [data, searchTerm, statusFilter]);
+  }, [data, searchTerm, statusFilter, sortConfig]);
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   
@@ -46,6 +66,25 @@ export default function DataTable({ data }) {
   const handleFilterChange = (e) => {
     setStatusFilter(e.target.value);
     setCurrentPage(1);
+  };
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+    setCurrentPage(1); // Reset to first page on sort
+  };
+
+  const renderSortIcon = (columnKey) => {
+    if (!sortConfig || sortConfig.key !== columnKey) {
+      return <ArrowUpDown size={14} style={{ opacity: 0.3 }} />;
+    }
+    if (sortConfig.direction === 'ascending') {
+      return <ArrowUp size={14} style={{ color: 'var(--brand-blue)' }} />;
+    }
+    return <ArrowDown size={14} style={{ color: 'var(--brand-blue)' }} />;
   };
 
   return (
@@ -88,13 +127,41 @@ export default function DataTable({ data }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th style={{ minWidth: '120px' }}>TMR Number</th>
-              <th>Purchasing Doc</th>
-              <th>Material</th>
-              <th>Short Text</th>
-              <th>Destination</th>
-              <th>Status TMR</th>
-              <th>Status GR</th>
+              <th onClick={() => requestSort('TMR Number')} style={{ cursor: 'pointer', minWidth: '130px', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  TMR Number {renderSortIcon('TMR Number')}
+                </div>
+              </th>
+              <th onClick={() => requestSort('Purchasing Document')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Purchasing Doc {renderSortIcon('Purchasing Document')}
+                </div>
+              </th>
+              <th onClick={() => requestSort('Material')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Material {renderSortIcon('Material')}
+                </div>
+              </th>
+              <th onClick={() => requestSort('Short Text')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Short Text {renderSortIcon('Short Text')}
+                </div>
+              </th>
+              <th onClick={() => requestSort('Destination.1')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Destination {renderSortIcon('Destination.1')}
+                </div>
+              </th>
+              <th onClick={() => requestSort('Status TMR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Status TMR {renderSortIcon('Status TMR')}
+                </div>
+              </th>
+              <th onClick={() => requestSort('Status Keterangan GR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Status GR {renderSortIcon('Status Keterangan GR')}
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
