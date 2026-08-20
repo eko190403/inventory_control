@@ -73,13 +73,13 @@ function App() {
 
     setLoading(true);
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       try {
         const arrayBuffer = evt.target.result;
         const wb = read(arrayBuffer, { type: 'array' });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        // Convert sheet to json dynamically finding the header row
+        
         const rawDataArray = utils.sheet_to_json(ws, { header: 1 });
         let headerRowIndex = 0;
         for (let i = 0; i < Math.min(20, rawDataArray.length); i++) {
@@ -91,41 +91,61 @@ function App() {
         
         const dataJson = utils.sheet_to_json(ws, { raw: false, range: headerRowIndex });
         
-        // Validation: Check if required columns exist
-        if (dataJson.length > 0) {
-          const firstRow = dataJson[0];
-          const requiredKeys = ['TMR Number', 'Status Keterangan GR'];
-          const missingKeys = requiredKeys.filter(k => !(k in firstRow));
-          if (missingKeys.length > 0) {
-            alert(`Format Excel salah! Tidak ditemukan kolom: ${missingKeys.join(', ')}`);
-            setLoading(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
-            return;
-          }
-        } else {
-          alert("File Excel kosong atau tidak bisa dibaca!");
+        if (dataJson.length === 0) {
+          alert('File Excel kosong atau tidak bisa dibaca!');
           setLoading(false);
           if (fileInputRef.current) fileInputRef.current.value = '';
           return;
         }
-        
-        // Replace existing data with new data
-        setData(dataJson);
-        
-        // Reset file input
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
+
+        if (!('TMR Number' in dataJson[0])) {
+          alert('Format Excel salah! Tidak ditemukan kolom: TMR Number');
+          setLoading(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
         }
-        setLoading(false);
+
+        // Map keys to Supabase format
+        const cleanedData = dataJson.map(row => {
+          const cleanedRow = {};
+          for (const key in row) {
+             const cleanKey = key.replace(/ /g, '_').replace(/\./g, '_').replace(/\//g, '_').toLowerCase();
+             cleanedRow[cleanKey] = String(row[key]);
+          }
+          return cleanedRow;
+        });
+
+        // 1. Delete old data
+        const { error: delError } = await supabase.from('inventory_records').delete().neq('id', 0);
+        if (delError) {
+          console.error('Delete error:', delError);
+        }
+
+        // 2. Insert new data in chunks
+        const chunkSize = 500;
+        for (let i = 0; i < cleanedData.length; i += chunkSize) {
+          const chunk = cleanedData.slice(i, i + chunkSize);
+          const { error: insertError } = await supabase.from('inventory_records').insert(chunk);
+          if (insertError) {
+             console.error('Insert error chunk', i, insertError);
+          }
+        }
+        
+        alert('Sukses! Data Excel berhasil diunggah dan disimpan ke Database Supabase.');
+        // Reload to fetch the newly uploaded data
+        window.location.reload();
+
       } catch (err) {
         console.error(err);
-        alert("Failed to parse Excel file. Please ensure it's a valid .xlsx or .xls file.");
+        alert('Gagal mengunggah file. ' + err.message);
         setLoading(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
       }
     };
     reader.onerror = () => {
-      alert("Failed to read file");
+      alert('Gagal membaca file');
       setLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     };
     reader.readAsArrayBuffer(file);
   };
