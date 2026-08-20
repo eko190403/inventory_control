@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Calendar, X, UploadCloud } from 'lucide-react';
 import { read, utils } from 'xlsx';
 import SummaryCards from './components/SummaryCards';
+import DashboardCharts from './components/DashboardCharts';
 import DataTable from './components/DataTable';
 
 function App() {
@@ -204,6 +205,7 @@ function App() {
 
       <main>
         <SummaryCards data={filteredData} />
+        <DashboardCharts data={filteredData} />
         <DataTable data={filteredData} />
       </main>
     </div>
