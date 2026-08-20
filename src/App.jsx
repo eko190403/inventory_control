@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Calendar, X, UploadCloud, DownloadCloud } from 'lucide-react';
 import { read, utils, writeFile } from 'xlsx';
+import { supabase } from './supabaseClient';
+
 import SummaryCards from './components/SummaryCards';
 import DashboardCharts from './components/DashboardCharts';
 import DataTable from './components/DataTable';
@@ -19,20 +21,50 @@ function App() {
   const [monthValue, setMonthValue] = useState('');
 
   useEffect(() => {
-    fetch(import.meta.env.BASE_URL + 'data.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to load data');
-        return response.json();
-      })
-      .then(jsonData => {
-        setData(jsonData);
+    const fetchFromSupabase = async () => {
+      try {
+        let allData = [];
+        let from = 0;
+        const step = 1000;
+        
+        // Fetch data in chunks to bypass 1000 row limit
+        while (true) {
+          const { data: chunk, error } = await supabase
+            .from('inventory_records')
+            .select('*')
+            .range(from, from + step - 1);
+            
+          if (error) throw error;
+          if (!chunk || chunk.length === 0) break;
+          
+          allData = [...allData, ...chunk];
+          if (chunk.length < step) break;
+          from += step;
+        }
+        
+        // Map database columns back to original keys needed by components
+        const mappedData = allData.map(row => ({
+          'TMR Number': row.tmr_number,
+          'Purchasing Document': row.purchasing_document,
+          'Material': row.material,
+          'Short Text': row.short_text,
+          'Status TMR': row.status_tmr,
+          'Status Keterangan GR': row.status_keterangan_gr,
+          'Destination.1': row.destination_1,
+          'Shipping Date': row.shipping_date,
+          'GR Date TMR': row.gr_date_tmr
+        }));
+        
+        setData(mappedData);
         setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         console.error(err);
         setError(err.message);
         setLoading(false);
-      });
+      }
+    };
+    
+    fetchFromSupabase();
   }, []);
 
   const handleFileUpload = (e) => {
