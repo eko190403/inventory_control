@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronLeft, ChevronRight, Filter, Database, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Filter, Database, ArrowUpDown, ArrowUp, ArrowDown, X } from 'lucide-react';
 
 export default function DataTable({ data }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [statusTmrFilter, setStatusTmrFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
   const rowsPerPage = 50;
 
   const filteredData = useMemo(() => {
@@ -13,6 +15,10 @@ export default function DataTable({ data }) {
     
     if (statusFilter !== 'All') {
       result = result.filter(item => item['Status Keterangan GR'] === statusFilter);
+    }
+    
+    if (statusTmrFilter !== 'All') {
+      result = result.filter(item => item['Status TMR'] === statusTmrFilter);
     }
 
     if (searchTerm) {
@@ -49,7 +55,7 @@ export default function DataTable({ data }) {
     }
 
     return result;
-  }, [data, searchTerm, statusFilter, sortConfig]);
+  }, [data, searchTerm, statusFilter, statusTmrFilter, sortConfig]);
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   
@@ -67,6 +73,11 @@ export default function DataTable({ data }) {
     setStatusFilter(e.target.value);
     setCurrentPage(1);
   };
+  
+  const handleTmrFilterChange = (e) => {
+    setStatusTmrFilter(e.target.value);
+    setCurrentPage(1);
+  };
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -74,7 +85,7 @@ export default function DataTable({ data }) {
       direction = 'descending';
     }
     setSortConfig({ key, direction });
-    setCurrentPage(1); // Reset to first page on sort
+    setCurrentPage(1);
   };
 
   const renderSortIcon = (columnKey) => {
@@ -109,8 +120,22 @@ export default function DataTable({ data }) {
             </select>
             <Filter size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
           </div>
+          
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <select 
+              value={statusTmrFilter} 
+              onChange={handleTmrFilterChange}
+              className="input-field select-field with-icon"
+            >
+              <option value="All">All Status TMR</option>
+              <option value="Delivered">Delivered</option>
+              <option value="On Process">On Process</option>
+              <option value="Dispatch">Dispatch</option>
+            </select>
+            <Filter size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
+          </div>
 
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', minWidth: '280px' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', minWidth: '250px' }}>
             <Search size={16} style={{ position: 'absolute', left: '1rem', color: 'var(--text-secondary)', pointerEvents: 'none' }} />
             <input 
               type="text" 
@@ -178,7 +203,7 @@ export default function DataTable({ data }) {
               else if (statusGr === 'Belum GR') badgeGrClass = 'warning';
 
               return (
-                <tr key={idx}>
+                <tr key={idx} onClick={() => setSelectedRow(row)} style={{ cursor: 'pointer' }}>
                   <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row['TMR Number'] || '-'}</td>
                   <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{row['Purchasing Document'] || '-'}</td>
                   <td style={{ color: 'var(--brand-blue)', fontWeight: 500 }}>{row['Material'] || '-'}</td>
@@ -218,6 +243,34 @@ export default function DataTable({ data }) {
           </button>
         </div>
       </div>
+
+      {/* Row Detail Modal */}
+      {selectedRow && (
+        <div className="modal-overlay" onClick={() => setSelectedRow(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-primary)' }}>Detail Data</h3>
+              <button 
+                onClick={() => setSelectedRow(null)} 
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.25rem', display: 'flex' }}
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <div className="modal-body">
+              {Object.keys(selectedRow).map((key, idx) => {
+                if (selectedRow[key] == null) return null; // skip null values
+                return (
+                  <div className="detail-row" key={idx}>
+                    <span className="detail-label">{key}</span>
+                    <span className="detail-value">{String(selectedRow[key])}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

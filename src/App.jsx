@@ -51,6 +51,24 @@ function App() {
         // raw: false ensures dates are parsed as strings instead of Excel date numbers
         const dataJson = utils.sheet_to_json(ws, { raw: false });
         
+        // Validation: Check if required columns exist
+        if (dataJson.length > 0) {
+          const firstRow = dataJson[0];
+          const requiredKeys = ['TMR Number', 'Status Keterangan GR'];
+          const missingKeys = requiredKeys.filter(k => !(k in firstRow));
+          if (missingKeys.length > 0) {
+            alert(`Format Excel salah! Tidak ditemukan kolom: ${missingKeys.join(', ')}`);
+            setLoading(false);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+          }
+        } else {
+          alert("File Excel kosong atau tidak bisa dibaca!");
+          setLoading(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
+        }
+        
         // Replace existing data with new data
         setData(dataJson);
         
