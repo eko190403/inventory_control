@@ -3,8 +3,6 @@ import { Search, ChevronLeft, ChevronRight, Filter, Database, ArrowUpDown, Arrow
 
 export default function DataTable({ data }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [statusTmrFilter, setStatusTmrFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -13,14 +11,6 @@ export default function DataTable({ data }) {
   const filteredData = useMemo(() => {
     let result = data;
     
-    if (statusFilter !== 'All') {
-      result = result.filter(item => item['Status Keterangan GR'] === statusFilter);
-    }
-    
-    if (statusTmrFilter !== 'All') {
-      result = result.filter(item => item['Status TMR'] === statusTmrFilter);
-    }
-
     if (searchTerm) {
       const lowerSearch = searchTerm.toLowerCase();
       result = result.filter(item => {
@@ -55,7 +45,7 @@ export default function DataTable({ data }) {
     }
 
     return result;
-  }, [data, searchTerm, statusFilter, statusTmrFilter, sortConfig]);
+  }, [data, searchTerm, sortConfig]);
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   
