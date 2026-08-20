@@ -120,6 +120,17 @@ function App() {
                  cleanedRow['destination_1'] = String(row[key]);
              }
           }
+          
+          // AUTO-CALCULATE 'Status Keterangan GR' if missing
+          if (!cleanedRow['status_keterangan_gr']) {
+             // Logic: If QTY GR > 0 or Material Document exists, it's SUDAH GR
+             if (row['QTY GR'] || row['Material Document'] || row['GR Date TMR']) {
+                 cleanedRow['status_keterangan_gr'] = 'SUDAH GR';
+             } else {
+                 cleanedRow['status_keterangan_gr'] = 'BELUM GR';
+             }
+          }
+          
           return cleanedRow;
         });
 
