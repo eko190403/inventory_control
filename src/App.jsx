@@ -194,13 +194,17 @@ function App() {
 
   const handleExport = () => {
     if (!filteredData.length) {
-      alert("No data to export");
+      alert("Tidak ada data untuk diekspor");
       return;
     }
-    const ws = utils.json_to_sheet(filteredData);
+    
+    // Hapus kolom 'id' dari database agar tidak ikut ter-download
+    const exportData = filteredData.map(({ id, ...rest }) => rest);
+    
+    const ws = utils.json_to_sheet(exportData);
     const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, "Filtered Data");
-    writeFile(wb, "export_data.xlsx");
+    utils.book_append_sheet(wb, ws, "Data Olahan");
+    writeFile(wb, "Data_Hasil_Olahan_TMR.xlsx");
   };
 
   const filteredData = useMemo(() => {
