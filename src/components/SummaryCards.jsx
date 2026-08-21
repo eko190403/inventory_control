@@ -13,21 +13,17 @@ export default function SummaryCards({ data }) {
     let expBelumGR = 0;
 
     data.forEach(item => {
-      // Parse Qty TMR safely
-      let qty = parseInt(item['Quantity TMR'], 10);
-      if (isNaN(qty)) qty = 0;
-      
       const status = item['Status Keterangan GR'];
       const matlGroup = (item['Matl. Group'] || '').toLowerCase();
 
       if (status === 'SUDAH GR') {
-        sudahGR += qty;
-        if (matlGroup.includes('inventory')) invSudahGR += qty;
-        else if (matlGroup.includes('expence') || matlGroup.includes('expense')) expSudahGR += qty;
+        sudahGR += 1;
+        if (matlGroup.includes('inventory')) invSudahGR += 1;
+        else if (matlGroup.includes('expence') || matlGroup.includes('expense')) expSudahGR += 1;
       } else if (status === 'BELUM GR') {
-        belumGR += qty;
-        if (matlGroup.includes('inventory')) invBelumGR += qty;
-        else if (matlGroup.includes('expence') || matlGroup.includes('expense')) expBelumGR += qty;
+        belumGR += 1;
+        if (matlGroup.includes('inventory')) invBelumGR += 1;
+        else if (matlGroup.includes('expence') || matlGroup.includes('expense')) expBelumGR += 1;
       }
     });
 
@@ -41,7 +37,7 @@ export default function SummaryCards({ data }) {
         <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '100px', height: '100px', background: 'var(--status-success)', filter: 'blur(60px)', opacity: 0.15, borderRadius: '50%' }}></div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', position: 'relative', zIndex: 2 }}>
           <div>
-            <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Total Qty Sudah GR</h3>
+            <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Jumlah TMR Sudah GR</h3>
             <div style={{ fontSize: '2.5rem', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1 }}>
               {stats.sudahGR.toLocaleString('id-ID')}
             </div>
@@ -56,7 +52,7 @@ export default function SummaryCards({ data }) {
         <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '100px', height: '100px', background: 'var(--status-warning)', filter: 'blur(60px)', opacity: 0.15, borderRadius: '50%' }}></div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', position: 'relative', zIndex: 2 }}>
           <div>
-            <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Total Qty Belum GR</h3>
+            <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Jumlah TMR Belum GR</h3>
             <div style={{ fontSize: '2.5rem', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1 }}>
               {stats.belumGR.toLocaleString('id-ID')}
             </div>

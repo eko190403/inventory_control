@@ -126,10 +126,7 @@ function App() {
              if (cleanKey === 'destination' && !row['Destination.1']) {
                  cleanedRow['destination_1'] = String(row[key]);
              }
-             // Mapping Matl.Group to material_type
-             if (cleanKey === 'matl_group') {
-                 cleanedRow['material_type'] = String(row[key]).trim();
-             }
+             // Ignored matl_group from Excel, will compute below
              // Parsing Quantity TMR (take number before comma or dot)
              if (cleanKey === 'quantity_tmr') {
                  let rawQty = String(row[key]);
@@ -144,23 +141,26 @@ function App() {
           }
           
           // AUTO-CALCULATE 'Status Keterangan GR'
-          // Logic: If Material Document exists, it's SUDAH GR
           if (row['Material Document']) {
               cleanedRow['status_keterangan_gr'] = 'SUDAH GR';
           } else {
               cleanedRow['status_keterangan_gr'] = 'BELUM GR';
           }
           
+          // AUTO-CALCULATE 'Matl. Group' (material_type)
+          const matStr = row['Material'] ? String(row['Material']).trim() : '';
+          if (!matStr) {
+              cleanedRow['material_type'] = 'Expense (OB)';
+          } else if (matStr.charAt(0).toUpperCase() === 'E') {
+              cleanedRow['material_type'] = 'Expense (OB)';
+          } else {
+              cleanedRow['material_type'] = 'Inventory';
+          }
+          
           return cleanedRow;
         });
 
-        // 1. Delete old data
-        const { error: delError } = await supabase.from('inventory_records').delete().neq('id', 0);
-        if (delError) {
-          console.error('Delete error:', delError);
-        }
-
-        // 2. Insert new data in chunks
+        // 1. Append data (no deletion of previous data)
         const chunkSize = 500;
         for (let i = 0; i < cleanedData.length; i += chunkSize) {
           const chunk = cleanedData.slice(i, i + chunkSize);
@@ -171,6 +171,25 @@ function App() {
              setLoading(false);
              return; // abort
           }
+        }
+
+        // 2. Row limit enforcement (max 300,000 rows)
+        try {
+          const { count } = await supabase.from('inventory_records').select('*', { count: 'exact', head: true });
+          if (count > 300000) {
+            const limitDelete = count - 300000;
+            const { data: oldest } = await supabase.from('inventory_records').select('id').order('id', { ascending: true }).limit(limitDelete);
+            if (oldest && oldest.length > 0) {
+              const idsToDelete = oldest.map(r => r.id);
+              // delete in batches if many
+              const delChunk = 1000;
+              for (let j = 0; j < idsToDelete.length; j += delChunk) {
+                  await supabase.from('inventory_records').delete().in('id', idsToDelete.slice(j, j + delChunk));
+              }
+            }
+          }
+        } catch(e) {
+          console.error('Failed to enforce row limit', e);
         }
         
         alert('Sukses! Data Excel berhasil diunggah dan disimpan ke Database Supabase.');
@@ -213,9 +232,9 @@ function App() {
     return data.filter(item => {
       let valid = true;
       
-      // Filter GR Date TMR Range
+      // Filter Shipping Date Range
       if (startDate || endDate) {
-        const dStr = item['GR Date TMR'] || ''; 
+        const dStr = item['Shipping Date'] || ''; 
         if (!dStr) {
             valid = false;
         } else {
