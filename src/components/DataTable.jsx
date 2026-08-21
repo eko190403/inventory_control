@@ -96,35 +96,32 @@ export default function DataTable({ data }) {
         <table className="data-table">
           <thead>
             <tr>
-              <th onClick={() => requestSort('TMR Number')} style={{ cursor: 'pointer', minWidth: '130px', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  TMR Number {renderSortIcon('TMR Number')}
-                </div>
+              <th onClick={() => requestSort('TMR Number')} style={{ cursor: 'pointer', minWidth: '110px', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>TMR Number {renderSortIcon('TMR Number')}</div>
               </th>
-              <th onClick={() => requestSort('Purchasing Document')} style={{ cursor: 'pointer', minWidth: '150px', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  Purchasing Doc {renderSortIcon('Purchasing Document')}
-                </div>
+              <th onClick={() => requestSort('Purchasing Document')} style={{ cursor: 'pointer', minWidth: '110px', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Pur. Doc {renderSortIcon('Purchasing Document')}</div>
               </th>
-              <th onClick={() => requestSort('GR Date TMR')} style={{ cursor: 'pointer', minWidth: '130px', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  GR Date TMR {renderSortIcon('GR Date TMR')}
-                </div>
+              <th onClick={() => requestSort('GR Date TMR')} style={{ cursor: 'pointer', minWidth: '110px', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>GR Date {renderSortIcon('GR Date TMR')}</div>
               </th>
               <th onClick={() => requestSort('Short Text')} style={{ cursor: 'pointer', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  Short Text {renderSortIcon('Short Text')}
-                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Material Deskripsi {renderSortIcon('Short Text')}</div>
               </th>
-              <th onClick={() => requestSort('Destination.1')} style={{ cursor: 'pointer', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  Destination {renderSortIcon('Destination.1')}
-                </div>
+              <th onClick={() => requestSort('Quantity TMR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Qty TMR {renderSortIcon('Quantity TMR')}</div>
+              </th>
+              <th onClick={() => requestSort('JUMLAH GR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Jumlah GR {renderSortIcon('JUMLAH GR')}</div>
+              </th>
+              <th onClick={() => requestSort('Belum GR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Belum GR {renderSortIcon('Belum GR')}</div>
               </th>
               <th onClick={() => requestSort('Material Document')} style={{ cursor: 'pointer', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  Material Document {renderSortIcon('Material Document')}
-                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Mat. Doc {renderSortIcon('Material Document')}</div>
+              </th>
+              <th onClick={() => requestSort('Status Keterangan GR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Status GR {renderSortIcon('Status Keterangan GR')}</div>
               </th>
             </tr>
           </thead>
@@ -135,16 +132,23 @@ export default function DataTable({ data }) {
                   <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row['TMR Number'] || '-'}</td>
                   <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{row['Purchasing Document'] || '-'}</td>
                   <td style={{ color: 'var(--text-secondary)' }}>{row['GR Date TMR'] || '-'}</td>
-                  <td style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--brand-blue)', fontWeight: 500 }} title={row['Short Text']}>
+                  <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--brand-blue)', fontWeight: 500 }} title={row['Short Text']}>
                     {row['Short Text'] || '-'}
                   </td>
-                  <td style={{ color: 'var(--text-secondary)' }}>{row['Destination.1'] || '-'}</td>
+                  <td style={{ fontWeight: 600 }}>{row['Quantity TMR']}</td>
+                  <td style={{ fontWeight: 600, color: 'var(--status-success)' }}>{row['JUMLAH GR']}</td>
+                  <td style={{ fontWeight: 600, color: 'var(--status-warning)' }}>{row['Belum GR']}</td>
                   <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{row['Material Document'] || '-'}</td>
+                  <td>
+                    <span className={`badge ${row['Status Keterangan GR'] === 'SUDAH GR' ? 'success' : 'warning'}`}>
+                      {row['Status Keterangan GR']}
+                    </span>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
+                <td colSpan="9" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                     <Search size={48} style={{ opacity: 0.2 }} />
                     <p>No records found matching your filters</p>

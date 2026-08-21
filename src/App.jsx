@@ -43,20 +43,28 @@ function App() {
         }
         
         // Map database columns back to original keys needed by components
-        const mappedData = allData.map(row => ({
-          'TMR Number': row.tmr_number,
-          'Purchasing Document': row.purchasing_document,
-          'Material': row.material,
-          'Short Text': row.short_text,
-          'Status TMR': row.status_tmr,
-          'Status Keterangan GR': row.status_keterangan_gr,
-          'Destination.1': row.destination_1,
-          'Shipping Date': row.shipping_date,
-          'GR Date TMR': row.gr_date_tmr,
-          'Matl. Group': row.material_type,
-          'Quantity TMR': row.quantity_tmr,
-          'Material Document': row.material_document
-        }));
+        const mappedData = allData.map(row => {
+          const qty = parseInt(row.quantity_tmr, 10) || 0;
+          const md = row.material_document;
+          const isBelumGr = !md || md === 'null' || md === '0' || md === '';
+          
+          return {
+            'TMR Number': row.tmr_number,
+            'Purchasing Document': row.purchasing_document,
+            'Material': row.material,
+            'Short Text': row.short_text,
+            'Status TMR': row.status_tmr,
+            'Status Keterangan GR': row.status_keterangan_gr,
+            'Destination.1': row.destination_1,
+            'Shipping Date': row.shipping_date,
+            'GR Date TMR': row.gr_date_tmr,
+            'Matl. Group': row.material_type,
+            'Quantity TMR': qty,
+            'Material Document': row.material_document,
+            'JUMLAH GR': isBelumGr ? 0 : qty,
+            'Belum GR': isBelumGr ? qty : 0
+          };
+        });
         
         setData(mappedData);
         setLoading(false);
