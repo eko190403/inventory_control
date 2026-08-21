@@ -112,7 +112,7 @@ function App() {
         const allowedKeys = [
           'tmr_number', 'purchasing_document', 'material', 'short_text', 'status_tmr', 
           'status_keterangan_gr', 'destination_1', 'shipping_date', 'gr_date_tmr',
-          'material_type', 'material_document', 'quantity_tmr'
+          'material_type', 'material_document', 'quantity_tmr', 'qty_gr', 'variance'
         ];
         
         const cleanedData = dataJson.map(row => {
@@ -127,16 +127,16 @@ function App() {
                  cleanedRow['destination_1'] = String(row[key]);
              }
              // Ignored matl_group from Excel, will compute below
-             // Parsing Quantity TMR (take number before comma or dot)
-             if (cleanKey === 'quantity_tmr') {
-                 let rawQty = String(row[key]);
+             // Parsing Quantity metrics (take number before comma or dot)
+             if (['quantity_tmr', 'qty_gr', 'variance'].includes(cleanKey)) {
+                 let rawQty = String(row[key] || '0');
                  if (rawQty.includes(',')) {
                      rawQty = rawQty.split(',')[0];
                  }
                  if (rawQty.includes('.')) {
                      rawQty = rawQty.split('.')[0];
                  }
-                 cleanedRow['quantity_tmr'] = rawQty.trim();
+                 cleanedRow[cleanKey] = rawQty.trim();
              }
           }
           

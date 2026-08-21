@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronLeft, ChevronRight, Database, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Database, ArrowUpDown, ArrowUp, ArrowDown, X } from 'lucide-react';
 
 export default function DataTable({ data }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -181,6 +181,60 @@ export default function DataTable({ data }) {
           </button>
         </div>
       )}
+
+      {selectedRow && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.8)',
+          display: 'flex', justifyContent: 'center', alignItems: 'center',
+          zIndex: 1000, padding: '1rem', backdropFilter: 'blur(4px)'
+        }}>
+          <div className="glass-card" style={{
+            width: '100%', maxWidth: '800px', maxHeight: '90vh',
+            overflowY: 'auto', position: 'relative',
+            background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+          }}>
+            <button 
+              onClick={() => setSelectedRow(null)}
+              style={{
+                position: 'absolute', top: '1rem', right: '1rem',
+                background: 'transparent', border: 'none', color: 'var(--text-secondary)',
+                cursor: 'pointer', padding: '0.5rem', borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              <X size={24} />
+            </button>
+
+            <h2 style={{ marginBottom: '1.5rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
+              Detail TMR: <span className="text-gradient">{selectedRow['TMR Number'] || 'N/A'}</span>
+            </h2>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+              {Object.entries(selectedRow).map(([key, value]) => {
+                if (key === 'id') return null; // skip internal id
+                return (
+                  <div key={key} style={{
+                    background: 'var(--bg-primary)', padding: '1rem', borderRadius: '8px',
+                    border: '1px solid var(--border-color)'
+                  }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
+                      {key}
+                    </div>
+                    <div style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 500, wordBreak: 'break-word' }}>
+                      {value || '-'}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
