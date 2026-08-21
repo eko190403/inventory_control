@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Calendar, X, UploadCloud, DownloadCloud } from 'lucide-react';
+import { Calendar, X, UploadCloud, DownloadCloud, Trash2 } from 'lucide-react';
 import { read, utils, writeFile } from 'xlsx';
 import { supabase } from './supabaseClient';
 
@@ -227,6 +227,26 @@ function App() {
     reader.readAsArrayBuffer(file);
   };
 
+
+  const handleResetData = async () => {
+    if (!window.confirm("AWAS: Apakah Anda yakin ingin menghapus SELURUH data dari database? Tindakan ini tidak bisa dibatalkan!")) {
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase.from('inventory_records').delete().neq('id', -1);
+      if (error) throw error;
+      
+      alert("Seluruh data berhasil dihapus!");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus data: " + err.message);
+      setLoading(false);
+    }
+  };
+
   const handleExport = () => {
     if (!filteredData.length) {
       alert("Tidak ada data untuk diekspor");
@@ -367,6 +387,16 @@ function App() {
           >
             <DownloadCloud size={18} />
             <span>Export Data</span>
+          </button>
+
+          <button 
+            className="btn"
+            style={{ background: 'var(--danger)', color: '#fff', border: 'none', marginLeft: '0.5rem' }}
+            onClick={handleResetData}
+            title="Hapus Semua Data"
+          >
+            <Trash2 size={18} />
+            <span>Reset</span>
           </button>
 
           <div style={{ width: '1px', height: '24px', background: 'var(--border-strong)', margin: '0 0.5rem' }}></div>
