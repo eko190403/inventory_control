@@ -42,7 +42,7 @@ function App() {
           from += step;
         }
         
-        // Map database columns back to original keys needed by components
+        // Map database columns back to original keys needed by components and export
         const mappedData = allData.map(row => {
           const qty = parseInt(row.quantity_tmr, 10) || 0;
           const md = row.material_document;
@@ -50,19 +50,31 @@ function App() {
           
           return {
             'TMR Number': row.tmr_number,
-            'Purchasing Document': row.purchasing_document,
-            'Material': row.material,
-            'Short Text': row.short_text,
             'Status TMR': row.status_tmr,
-            'Status Keterangan GR': row.status_keterangan_gr,
-            'Destination.1': row.destination_1,
+            'Destination': row.destination_1,
             'Shipping Date': row.shipping_date,
             'GR Date TMR': row.gr_date_tmr,
-            'Matl. Group': row.material_type,
+            'Purchasing Document': row.purchasing_document,
+            'Item': row.item,
+            'Material': row.material,
+            'Short Text': row.short_text,
             'Quantity TMR': qty,
             'Material Document': row.material_document,
+            'Material Doc. Year': row.material_doc__year,
+            'Material Doc.Item': row.material_doc_item,
+            'Storage Location': row.storage_location,
+            'Movement Type': row.movement_type,
+            'QTY GR': parseInt(row.qty_gr, 10) || 0,
+            'Posting Date': row.posting_date,
+            'Entry Date': row.entry_date,
+            'Matl.Group': row.material_type,
             'JUMLAH GR': isBelumGr ? 0 : qty,
-            'Belum GR': isBelumGr ? qty : 0
+            'Belum GR': isBelumGr ? qty : 0,
+            
+            // These 3 are kept just so the DataTable filters/renders don't break
+            'Status Keterangan GR': row.status_keterangan_gr,
+            'Destination.1': row.destination_1,
+            'Matl. Group': row.material_type
           };
         });
         
@@ -118,9 +130,7 @@ function App() {
 
         // Map keys to Supabase format (ONLY ALLOWED KEYS to prevent insert crash)
         const allowedKeys = [
-          'tmr_number', 'purchasing_document', 'material', 'short_text', 'status_tmr', 
-          'status_keterangan_gr', 'destination_1', 'shipping_date', 'gr_date_tmr',
-          'material_type', 'material_document', 'quantity_tmr', 'qty_gr', 'variance'
+          'id', 'tmr_number', 'purchasing_document', 'item', 'status_tmr', 'qty_colly', 'storage_location', 'material', 'short_text', 'base_unit_of_measure', 'quantity_tmr', 'qty_gr', 'variance', 'material_document', 'status_keterangan_gr', 'no__colly', 'total_qty_colly', 'shipping_date', 'expedition_code', 'expedition_name', 'vihicle_type', 'vehicle_name', 'driver', 'vihicle_number', 'capacity', 'destination', 'destination_1', 'driver_phone', 'material_type', 'gr_date_tmr', '0', 'shipment_number', 'rl_no_', 'storage_location_1', 'qty_rl', 'order_unit', 'created_on', 'created_by', 'supplier', 'name_1', 'purchasing_group', 'location_gr', 'recipient', 'distribution_date', '0_1', 'material_doc__year', 'material_doc_item', 'movement_type', 'debit_credit_ind_', 'posting_date', 'entry_date', 'time_of_entry', 'user_name'
         ];
         
         const cleanedData = dataJson.map(row => {
@@ -225,8 +235,30 @@ function App() {
       return;
     }
     
-    // Hapus kolom 'id' dari database agar tidak ikut ter-download
-    const exportData = filteredData.map(({ id, ...rest }) => rest);
+    // Select specific columns in exact order
+    const exportData = filteredData.map(row => ({
+        'TMR Number': row['TMR Number'],
+        'Status TMR': row['Status TMR'],
+        'Destination': row['Destination'],
+        'Shipping Date': row['Shipping Date'],
+        'GR Date TMR': row['GR Date TMR'],
+        'Purchasing Document': row['Purchasing Document'],
+        'Item': row['Item'],
+        'Material': row['Material'],
+        'Short Text': row['Short Text'],
+        'Quantity TMR': row['Quantity TMR'],
+        'Material Document': row['Material Document'],
+        'Material Doc. Year': row['Material Doc. Year'],
+        'Material Doc.Item': row['Material Doc.Item'],
+        'Storage Location': row['Storage Location'],
+        'Movement Type': row['Movement Type'],
+        'QTY GR': row['QTY GR'],
+        'Posting Date': row['Posting Date'],
+        'Entry Date': row['Entry Date'],
+        'Matl.Group': row['Matl.Group'],
+        'JUMLAH GR': row['JUMLAH GR'],
+        'Belum GR': row['Belum GR']
+    }));
     
     const ws = utils.json_to_sheet(exportData);
     const wb = utils.book_new();
