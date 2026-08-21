@@ -358,8 +358,8 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <div>
-          <h1 className="app-title text-gradient">Logistics Dashboard</h1>
-          <p className="app-subtitle">Goods Receipt & Inventory Monitoring System</p>
+          <h1 className="app-title text-gradient">InvenTrack Dashboard</h1>
+          <p className="app-subtitle">Pantau Pergerakan Material Anda</p>
         </div>
         
         <div className="toolbar glass-panel">
