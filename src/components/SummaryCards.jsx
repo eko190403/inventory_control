@@ -9,20 +9,24 @@ export default function SummaryCards({ data }) {
     let expBelumGRQty = 0;
 
     data.forEach(item => {
-      let qtyGR = parseInt(item['Qty GR'], 10);
-      if (isNaN(qtyGR)) qtyGR = 0;
-      
-      let variance = parseInt(item['Variance'], 10);
-      if (isNaN(variance)) variance = 0;
+      let qty = parseInt(item['Quantity TMR'], 10);
+      if (isNaN(qty)) qty = 0;
 
+      const status = item['Status Keterangan GR'];
       const matlGroup = (item['Matl. Group'] || '').toLowerCase();
 
       if (matlGroup.includes('expence') || matlGroup.includes('expense')) {
-        expSudahGRQty += qtyGR;
-        expBelumGRQty += variance;
+        if (status === 'SUDAH GR') {
+            expSudahGRQty += qty;
+        } else {
+            expBelumGRQty += qty;
+        }
       } else {
-        invSudahGRQty += qtyGR;
-        invBelumGRQty += variance;
+        if (status === 'SUDAH GR') {
+            invSudahGRQty += qty;
+        } else {
+            invBelumGRQty += qty;
+        }
       }
     });
 
