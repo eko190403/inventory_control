@@ -148,12 +148,10 @@ function App() {
              // Parsing Quantity metrics (take number before comma or dot)
              if (['quantity_tmr', 'qty_gr', 'variance'].includes(cleanKey)) {
                  let rawQty = String(row[key] || '0');
-                 if (rawQty.includes(',')) {
-                     rawQty = rawQty.split(',')[0];
-                 }
-                 if (rawQty.includes('.')) {
-                     rawQty = rawQty.split('.')[0];
-                 }
+                 // Remove .00 or ,00 at the end of the string if it exists
+                 rawQty = rawQty.replace(/[,.]00$/, '');
+                 // Remove all remaining commas and dots (thousands separators)
+                 rawQty = rawQty.replace(/[,.]/g, '');
                  cleanedRow[cleanKey] = rawQty.trim();
              }
           }
