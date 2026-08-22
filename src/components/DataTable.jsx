@@ -229,7 +229,7 @@ export default function DataTable({ data }) {
                       {key}
                     </div>
                     <div style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 500, wordBreak: 'break-word' }}>
-                      {value || '-'}
+                      {value !== null && value !== '' && value !== undefined ? value : '-'}
                     </div>
                   </div>
                 );
