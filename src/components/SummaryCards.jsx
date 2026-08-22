@@ -9,7 +9,7 @@ export default function SummaryCards({ data }) {
     let expBelumGRQty = 0;
 
     data.forEach(item => {
-      let qty = parseInt(item['Quantity TMR'], 10);
+      let qty = parseFloat(item['Quantity TMR']);
       if (isNaN(qty)) qty = 0;
 
       const status = item['Status Keterangan GR'];
@@ -43,10 +43,10 @@ export default function SummaryCards({ data }) {
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Inventory</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invSudahGRQty.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
+                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invSudahGRQty.toLocaleString('id-ID', { maximumFractionDigits: 2 })}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
                 </span>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invBelumGRQty.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
+                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invBelumGRQty.toLocaleString('id-ID', { maximumFractionDigits: 2 })}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
                 </span>
             </div>
           </div>
@@ -63,10 +63,10 @@ export default function SummaryCards({ data }) {
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Expense (OB)</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expSudahGRQty.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
+                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expSudahGRQty.toLocaleString('id-ID', { maximumFractionDigits: 2 })}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
                 </span>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expBelumGRQty.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
+                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expBelumGRQty.toLocaleString('id-ID', { maximumFractionDigits: 2 })}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Qty</span>
                 </span>
             </div>
           </div>
