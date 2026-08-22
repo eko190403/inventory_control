@@ -44,7 +44,7 @@ function App() {
         
         // Map database columns back to original keys needed by components and export
         const mappedData = allData.map(row => {
-          const qty = parseInt(row.quantity_tmr, 10) || 0;
+          const qty = parseFloat(row.quantity_tmr) || 0;
           const md = row.material_document;
           const isBelumGr = !md || md === 'null' || md === '0' || md === '';
           
@@ -64,7 +64,7 @@ function App() {
             'Material Doc.Item': row.material_doc_item,
             'Storage Location': row.storage_location,
             'Movement Type': row.movement_type,
-            'QTY GR': parseInt(row.qty_gr, 10) || 0,
+            'QTY GR': parseFloat(row.qty_gr) || 0,
             'Posting Date': row.posting_date,
             'Entry Date': row.entry_date,
             'Matl.Group': row.material_type,
