@@ -368,8 +368,8 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <div>
-          <h1 className="app-title text-gradient">InvenTrack Dashboard</h1>
-          
+          <h1 className="app-title text-gradient" style={{ marginBottom: '0.25rem' }}>TMR Monitoring Dashboard</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Transfer Manifest Report & Goods Receipt Monitoring</p>
         </div>
         
         <div className="toolbar glass-panel">
@@ -414,7 +414,7 @@ function App() {
           {/* Filters */}
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             {/* GR Date Range Filter */}
-            <div className="input-group date-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="input-group date-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#F5F7FA', padding: '0 0.5rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
               <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
               <input 
                 type="date" 
@@ -440,7 +440,7 @@ function App() {
               value={statusGrFilter} 
               onChange={e => setStatusGrFilter(e.target.value)}
               className="input-group"
-              style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
+              style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
             >
               <option value="">Semua Status GR</option>
               <option value="SUDAH GR">Sudah GR</option>
@@ -452,7 +452,7 @@ function App() {
               value={statusFilter} 
               onChange={e => setStatusFilter(e.target.value)}
               className="input-group"
-              style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
+              style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
             >
               <option value="">Semua Status TMR</option>
               {statusOptions.map(opt => (
@@ -465,7 +465,7 @@ function App() {
               value={matlGroupFilter} 
               onChange={e => setMatlGroupFilter(e.target.value)}
               className="input-group"
-              style={{ background: 'var(--bg-card)', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
+              style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
             >
               <option value="">Semua Matl Group</option>
               <option value="Inventory">Inventory</option>
