@@ -401,7 +401,7 @@ function App() {
 
           <button 
             className="btn"
-            style={{ background: 'var(--danger)', color: '#fff', border: 'none', marginLeft: '0.5rem' }}
+            style={{ marginLeft: '0.5rem' }}
             onClick={handleResetData}
             title="Hapus Semua Data"
           >
