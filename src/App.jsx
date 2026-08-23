@@ -6,30 +6,6 @@ import { supabase } from './supabaseClient';
 import SummaryCards from './components/SummaryCards';
 import DataTable from './components/DataTable';
 
-const CustomDateInput = ({ value, onChange, title }) => {
-  const [isFocused, setIsFocused] = React.useState(false);
-
-  const getDisplayValue = () => {
-    if (!value) return '';
-    const [y, m, d] = value.split('-');
-    return `${d}/${m}/${y}`;
-  };
-
-  return (
-    <input
-      type={isFocused ? "date" : "text"}
-      value={isFocused ? value : getDisplayValue()}
-      onChange={(e) => onChange(e.target.value)}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
-      placeholder="DD/MM/YYYY"
-      className="input-field date-input"
-      style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none', width: '110px' }}
-      title={title}
-    />
-  );
-};
-
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -440,15 +416,21 @@ function App() {
             {/* GR Date Range Filter */}
             <div className="input-group date-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
-              <CustomDateInput
+              <input 
+                type="date" 
                 value={startDate}
-                onChange={setStartDate}
+                onChange={e => setStartDate(e.target.value)}
+                className="input-field date-input"
+                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
                 title="Start GR Date"
               />
               <span style={{ color: 'var(--text-secondary)' }}>-</span>
-              <CustomDateInput
+              <input 
+                type="date" 
                 value={endDate}
-                onChange={setEndDate}
+                onChange={e => setEndDate(e.target.value)}
+                className="input-field date-input"
+                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
                 title="End GR Date"
               />
             </div>
