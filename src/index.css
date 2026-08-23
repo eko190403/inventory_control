@@ -260,10 +260,9 @@ h1, h2, h3, h4 {
 
 /* Date Input Fixes */
 .date-input {
-  color-scheme: dark;
+  color-scheme: light;
 }
 .date-input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
   opacity: 0.5;
   cursor: pointer;
   padding: 4px;
@@ -278,7 +277,7 @@ h1, h2, h3, h4 {
 }
 
 .input-group.date-group {
-  background: rgba(0, 0, 0, 0.25);
+  background: #F5F7FA;
   border: 1px solid var(--border-light);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
@@ -292,7 +291,7 @@ h1, h2, h3, h4 {
 }
 
 input[type="date"], input[type="month"], .date-input {
-  color: #ffffff !important;
+  color: var(--text-primary) !important;
 }
 
 
