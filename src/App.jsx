@@ -290,9 +290,9 @@ function App() {
     return data.filter(item => {
       let valid = true;
       
-      // Filter Shipping Date Range
+      // Filter Date Range
       if (startDate || endDate) {
-        const dStr = item['Shipping Date'] || ''; 
+        const dStr = item['Shipping Date'] || item['GR Date TMR'] || ''; 
         if (!dStr) {
             valid = false;
         } else {
@@ -301,8 +301,18 @@ function App() {
             if (isNaN(itemDateObj.getTime())) {
                 valid = false;
             } else {
-                if (startDate && itemDateObj < new Date(startDate)) valid = false;
-                if (endDate && itemDateObj > new Date(endDate)) valid = false;
+                itemDateObj.setHours(0, 0, 0, 0);
+                
+                if (startDate) {
+                    const [y, m, d] = startDate.split('-');
+                    const startObj = new Date(y, m - 1, d);
+                    if (itemDateObj < startObj) valid = false;
+                }
+                if (endDate) {
+                    const [y, m, d] = endDate.split('-');
+                    const endObj = new Date(y, m - 1, d);
+                    if (itemDateObj > endObj) valid = false;
+                }
             }
         }
       }
