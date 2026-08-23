@@ -50,7 +50,7 @@ export default function SummaryCards({ data }) {
                 </span>
             </div>
           </div>
-          <div className="icon-container" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa', width: '64px', height: '64px' }}>
+          <div className="icon-container" style={{ background: 'rgba(30, 58, 95, 0.1)', color: 'var(--brand-purple)', width: '64px', height: '64px' }}>
             <Box size={32} strokeWidth={2.5} />
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function SummaryCards({ data }) {
                 </span>
             </div>
           </div>
-          <div className="icon-container" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#7dd3fc', width: '64px', height: '64px' }}>
+          <div className="icon-container" style={{ background: 'rgba(37, 99, 235, 0.1)', color: 'var(--brand-blue)', width: '64px', height: '64px' }}>
             <DollarSign size={32} strokeWidth={2.5} />
           </div>
         </div>

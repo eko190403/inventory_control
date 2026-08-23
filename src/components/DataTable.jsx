@@ -189,15 +189,15 @@ export default function DataTable({ data }) {
       {selectedRow && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.8)',
+          backgroundColor: 'rgba(30, 58, 95, 0.4)',
           display: 'flex', justifyContent: 'center', alignItems: 'center',
           zIndex: 1000, padding: '1rem', backdropFilter: 'blur(4px)'
         }}>
           <div className="glass-card" style={{
             width: '100%', maxWidth: '800px', maxHeight: '90vh',
             overflowY: 'auto', position: 'relative',
-            background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            background: 'var(--bg-card)', border: '1px solid var(--border-light)',
+            boxShadow: '0 25px 50px -12px rgba(30, 58, 95, 0.25)'
           }}>
             <button 
               onClick={() => setSelectedRow(null)}
@@ -207,13 +207,13 @@ export default function DataTable({ data }) {
                 cursor: 'pointer', padding: '0.5rem', borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}
-              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+              onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-card-hover)'}
               onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
             >
               <X size={24} />
             </button>
 
-            <h2 style={{ marginBottom: '1.5rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
+            <h2 style={{ marginBottom: '1.5rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-light)', paddingBottom: '1rem' }}>
               Detail TMR: <span className="text-gradient">{selectedRow['TMR Number'] || 'N/A'}</span>
             </h2>
 
@@ -222,8 +222,8 @@ export default function DataTable({ data }) {
                 if (key === 'id') return null; // skip internal id
                 return (
                   <div key={key} style={{
-                    background: 'var(--bg-primary)', padding: '1rem', borderRadius: '8px',
-                    border: '1px solid var(--border-color)'
+                    background: 'var(--bg-dark)', padding: '1rem', borderRadius: '8px',
+                    border: '1px solid var(--border-light)'
                   }}>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
                       {key}

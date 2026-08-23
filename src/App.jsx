@@ -391,7 +391,7 @@ function App() {
 
           <button 
             className="btn"
-            style={{ background: 'var(--brand-purple)', color: '#fff', border: 'none', marginLeft: '0.5rem' }}
+            style={{ background: 'var(--brand-blue)', color: '#fff', border: 'none', marginLeft: '0.5rem' }}
             onClick={handleExport}
             disabled={!filteredData.length}
           >

@@ -55,7 +55,7 @@ export default function DashboardCharts({ data }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div style={{ background: 'rgba(20, 22, 28, 0.9)', border: '1px solid var(--border-light)', padding: '1rem', borderRadius: '12px', backdropFilter: 'blur(16px)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', padding: '1rem', borderRadius: '12px', backdropFilter: 'blur(16px)', boxShadow: '0 8px 32px rgba(30, 58, 95, 0.15)' }}>
           <p style={{ color: 'var(--text-primary)', marginBottom: '0.75rem', fontWeight: 600 }}>{label || payload[0].name}</p>
           {payload.map((entry, index) => (
             <div key={index} style={{ color: entry.color || entry.payload.fill, display: 'flex', gap: '1.5rem', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
