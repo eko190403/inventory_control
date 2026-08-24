@@ -24,6 +24,30 @@ function formatToDDMMYYYY(val) {
   return `${d}/${m}/${y}`;
 }
 
+const CustomDateInput = ({ value, onChange, title }) => {
+  const [isFocused, setIsFocused] = React.useState(false);
+
+  const getDisplayValue = () => {
+    if (!value) return '';
+    const [y, m, d] = value.split('-');
+    return `${d}/${m}/${y}`;
+  };
+
+  return (
+    <input
+      type={isFocused ? "date" : "text"}
+      value={isFocused ? value : getDisplayValue()}
+      onChange={(e) => onChange(e.target.value)}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+      placeholder="DD/MM/YYYY"
+      className="input-field date-input"
+      style={{ background: '#FFFFFF', color: 'var(--text-primary)', border: 'none', outline: 'none', width: '120px' }}
+      title={title}
+    />
+  );
+};
+
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -310,7 +334,7 @@ function App() {
       
       // Filter Date Range
       if (startDate || endDate) {
-        const dStr = item['Shipping Date'] || item['GR Date TMR'] || ''; 
+        const dStr = item['Shipping Date'] || ''; 
         if (!dStr || dStr === '-') {
             valid = false;
         } else {
@@ -438,24 +462,18 @@ function App() {
           {/* Filters */}
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             {/* GR Date Range Filter */}
-            <div className="input-group date-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#F5F7FA', padding: '0 0.5rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                        <div className="input-group date-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
-              <input 
-                type="date" 
+              <CustomDateInput
                 value={startDate}
-                onChange={e => setStartDate(e.target.value)}
-                className="input-field date-input"
-                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
-                title="Start GR Date"
+                onChange={setStartDate}
+                title="Start Shipping Date"
               />
               <span style={{ color: 'var(--text-secondary)' }}>-</span>
-              <input 
-                type="date" 
+              <CustomDateInput
                 value={endDate}
-                onChange={e => setEndDate(e.target.value)}
-                className="input-field date-input"
-                style={{ background: 'transparent', color: 'var(--text-primary)', border: 'none', outline: 'none' }}
-                title="End GR Date"
+                onChange={setEndDate}
+                title="End Shipping Date"
               />
             </div>
 
