@@ -68,7 +68,7 @@ function App() {
           
           return {
             'TMR Number': row.tmr_number,
-            'Status TMR': row.status_tmr,
+            'Status TMR': (!row.status_tmr || row.status_tmr === 'null') ? '-' : row.status_tmr,
             'Destination': row.destination_1,
             'Shipping Date': row.shipping_date,
             'GR Date TMR': row.gr_date_tmr,
@@ -274,7 +274,7 @@ function App() {
     // Select specific columns in exact order
     const exportData = filteredData.map(row => ({
         'TMR Number': row['TMR Number'],
-        'Status TMR': row['Status TMR'],
+        'Status TMR': (!row['Status TMR'] || row['Status TMR'] === 'null') ? '-' : row['Status TMR'],
         'Destination': row['Destination'],
         'Shipping Date': row['Shipping Date'],
         'GR Date TMR': row['GR Date TMR'],
@@ -365,7 +365,7 @@ function App() {
   
   // Unique Options for Status TMR
   const statusOptions = useMemo(() => {
-     const statuses = data.map(d => d['Status TMR']).filter(Boolean);
+     const statuses = data.map(d => d['Status TMR']).filter(val => val && val !== '-');
      return [...new Set(statuses)];
   }, [data]);
 
