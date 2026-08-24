@@ -296,8 +296,15 @@ function App() {
         if (!dStr) {
             valid = false;
         } else {
-            // Convert '8/14/26' or similar to Date object
-            const itemDateObj = new Date(dStr);
+            // Handle Excel serial date (e.g. '46247') or standard date string
+            let itemDateObj;
+            if (!isNaN(dStr) && !isNaN(parseFloat(dStr))) {
+                const serial = parseFloat(dStr);
+                itemDateObj = new Date(Math.round((serial - 25569) * 86400 * 1000));
+                itemDateObj.setMinutes(itemDateObj.getMinutes() + itemDateObj.getTimezoneOffset());
+            } else {
+                itemDateObj = new Date(dStr);
+            }
             if (isNaN(itemDateObj.getTime())) {
                 valid = false;
             } else {
