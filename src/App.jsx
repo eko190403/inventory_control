@@ -6,6 +6,24 @@ import { supabase } from './supabaseClient';
 import SummaryCards from './components/SummaryCards';
 import DataTable from './components/DataTable';
 
+function formatToDDMMYYYY(val) {
+  if (!val || val === 'null' || val === '-') return '-';
+  let dateObj;
+  // if it's an excel serial date
+  if (!isNaN(val) && !isNaN(parseFloat(val))) {
+      const serial = parseFloat(val);
+      dateObj = new Date(Math.round((serial - 25569) * 86400 * 1000));
+      dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+  } else {
+      dateObj = new Date(val);
+  }
+  if (isNaN(dateObj.getTime())) return val;
+  const d = String(dateObj.getDate()).padStart(2, '0');
+  const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const y = dateObj.getFullYear();
+  return `${d}/${m}/${y}`;
+}
+
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -293,15 +311,14 @@ function App() {
       // Filter Date Range
       if (startDate || endDate) {
         const dStr = item['Shipping Date'] || item['GR Date TMR'] || ''; 
-        if (!dStr) {
+        if (!dStr || dStr === '-') {
             valid = false;
         } else {
-            // Handle Excel serial date (e.g. '46247') or standard date string
             let itemDateObj;
-            if (!isNaN(dStr) && !isNaN(parseFloat(dStr))) {
-                const serial = parseFloat(dStr);
-                itemDateObj = new Date(Math.round((serial - 25569) * 86400 * 1000));
-                itemDateObj.setMinutes(itemDateObj.getMinutes() + itemDateObj.getTimezoneOffset());
+            const parts = dStr.split('/');
+            if (parts.length === 3) {
+                const [d, m, y] = parts;
+                itemDateObj = new Date(y, m - 1, d);
             } else {
                 itemDateObj = new Date(dStr);
             }
