@@ -8,16 +8,48 @@ import DataTable from './components/DataTable';
 
 function formatToDDMMYYYY(val) {
   if (!val || val === 'null' || val === '-') return '-';
-  let dateObj;
+  
   // if it's an excel serial date
   if (!isNaN(val) && !isNaN(parseFloat(val))) {
       const serial = parseFloat(val);
-      dateObj = new Date(Math.round((serial - 25569) * 86400 * 1000));
+      const dateObj = new Date(Math.round((serial - 25569) * 86400 * 1000));
       dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const y = dateObj.getFullYear();
+      return `${d}/${m}/${y}`;
+  }
+  
+  let dateObj;
+  const strVal = String(val).trim().split(' ')[0]; // remove time if any
+  const parts = strVal.split(/[/.-]/);
+  
+  if (parts.length === 3) {
+      if (parts[0].length === 4) {
+          // YYYY-MM-DD
+          dateObj = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      } else {
+          // DD-MM-YYYY or MM-DD-YYYY or M/D/YY
+          let day = parseInt(parts[0], 10);
+          let month = parseInt(parts[1], 10);
+          let year = parseInt(parts[2], 10);
+          
+          if (month > 12) {
+             let temp = month; month = day; day = temp;
+          }
+          
+          if (year < 100) {
+              year += 2000;
+          }
+          
+          dateObj = new Date(year, month - 1, day);
+      }
   } else {
       dateObj = new Date(val);
   }
-  if (isNaN(dateObj.getTime())) return val;
+
+  if (isNaN(dateObj?.getTime())) return val;
+  
   const d = String(dateObj.getDate()).padStart(2, '0');
   const m = String(dateObj.getMonth() + 1).padStart(2, '0');
   const y = dateObj.getFullYear();
@@ -25,26 +57,30 @@ function formatToDDMMYYYY(val) {
 }
 
 const CustomDateInput = ({ value, onChange, title }) => {
-  const [isFocused, setIsFocused] = React.useState(false);
-
   const getDisplayValue = () => {
-    if (!value) return '';
+    if (!value) return 'DD/MM/YYYY';
     const [y, m, d] = value.split('-');
-    return `${d}/${m}/${y}`;
+    let displayY = parseInt(y, 10);
+    if (displayY < 100) displayY += 2000;
+    return `${d}/${m}/${displayY}`;
   };
 
   return (
-    <input
-      type={isFocused ? "date" : "text"}
-      value={isFocused ? value : getDisplayValue()}
-      onChange={(e) => onChange(e.target.value)}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
-      placeholder="DD/MM/YYYY"
-      className="input-field date-input"
-      style={{ background: '#FFFFFF', color: 'var(--text-primary)', border: 'none', outline: 'none', width: '120px' }}
-      title={title}
-    />
+    <div style={{ position: 'relative', minWidth: '150px', height: '36px', display: 'flex', alignItems: 'center', background: '#FFFFFF', borderRadius: '6px', border: '1px solid var(--border-light)' }}>
+      <div style={{ position: 'absolute', left: '0', top: '0', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: value ? 'var(--text-primary)' : 'var(--text-secondary)', pointerEvents: 'none', fontWeight: 500, fontSize: '0.95rem', whiteSpace: 'nowrap' }}>
+        {getDisplayValue()}
+      </div>
+      <input
+        type="date"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        title={title}
+        style={{ 
+          position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', 
+          opacity: 0, cursor: 'pointer', appearance: 'none', border: 'none'
+        }}
+      />
+    </div>
   );
 };
 
@@ -94,8 +130,8 @@ function App() {
             'TMR Number': row.tmr_number,
             'Status TMR': (!row.status_tmr || row.status_tmr === 'null') ? '-' : row.status_tmr,
             'Destination': row.destination_1,
-            'Shipping Date': row.shipping_date,
-            'GR Date TMR': row.gr_date_tmr,
+            'Shipping Date': formatToDDMMYYYY(row.shipping_date),
+            'GR Date TMR': formatToDDMMYYYY(row.gr_date_tmr),
             'Purchasing Document': row.purchasing_document,
             'Item': row.item,
             'Material': row.material,
@@ -107,8 +143,8 @@ function App() {
             'Storage Location': row.storage_location,
             'Movement Type': row.movement_type,
             'QTY GR': parseFloat(row.qty_gr) || 0,
-            'Posting Date': row.posting_date,
-            'Entry Date': row.entry_date,
+            'Posting Date': formatToDDMMYYYY(row.posting_date),
+            'Entry Date': formatToDDMMYYYY(row.entry_date),
             'Matl.Group': row.material_type,
             'JUMLAH GR': isBelumGr ? 0 : qty,
             'Belum GR': isBelumGr ? qty : 0,
@@ -338,29 +374,29 @@ function App() {
         if (!dStr || dStr === '-') {
             valid = false;
         } else {
-            let itemDateObj;
+            // dStr is guaranteed to be DD/MM/YYYY because of formatToDDMMYYYY
             const parts = dStr.split('/');
             if (parts.length === 3) {
-                const [d, m, y] = parts;
-                itemDateObj = new Date(y, m - 1, d);
-            } else {
-                itemDateObj = new Date(dStr);
-            }
-            if (isNaN(itemDateObj.getTime())) {
-                valid = false;
-            } else {
-                itemDateObj.setHours(0, 0, 0, 0);
+                const itemDateObj = new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
                 
                 if (startDate) {
-                    const [y, m, d] = startDate.split('-');
-                    const startObj = new Date(y, m - 1, d);
+                    const sParts = startDate.split('-');
+                    let y = parseInt(sParts[0], 10);
+                    if (y < 100) y += 2000;
+                    const startObj = new Date(y, parseInt(sParts[1], 10) - 1, parseInt(sParts[2], 10));
                     if (itemDateObj < startObj) valid = false;
                 }
                 if (endDate) {
-                    const [y, m, d] = endDate.split('-');
-                    const endObj = new Date(y, m - 1, d);
+                    const eParts = endDate.split('-');
+                    let y = parseInt(eParts[0], 10);
+                    if (y < 100) y += 2000;
+                    const endObj = new Date(y, parseInt(eParts[1], 10) - 1, parseInt(eParts[2], 10));
+                    // End date should be at the end of the day to include all times on that day
+                    endObj.setHours(23, 59, 59, 999);
                     if (itemDateObj > endObj) valid = false;
                 }
+            } else {
+                valid = false; // Fallback if format is completely unrecognized
             }
         }
       }
