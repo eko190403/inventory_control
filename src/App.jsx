@@ -74,6 +74,7 @@ const CustomDateInput = ({ value, onChange, title }) => {
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onClick={(e) => e.target.showPicker && e.target.showPicker()}
         title={title}
         style={{ 
           position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', 
