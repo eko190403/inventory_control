@@ -5,6 +5,7 @@ import { supabase } from './supabaseClient';
 
 import SummaryCards from './components/SummaryCards';
 import ShippingScoreCard from './components/ShippingScoreCard';
+import GRScoreCard from './components/GRScoreCard';
 import DataTable from './components/DataTable';
 import { calculateWorkDays } from './utils/dateUtils';
 
@@ -158,7 +159,7 @@ function App() {
             'Matl. Group': row.material_type
           };
           
-          // Calculate work days and status
+          // Calculate work days and status for Shipping
           const workDays = calculateWorkDays(mappedRow['Shipping Date'], mappedRow['GR Date TMR'], []);
           mappedRow['Waktu Pengerjaan'] = workDays;
           
@@ -166,6 +167,16 @@ function App() {
               mappedRow['Status Shipping'] = '-';
           } else {
               mappedRow['Status Shipping'] = workDays > 2 ? 'Late' : 'Ontime';
+          }
+          
+          // Calculate work days and status for GR 101
+          const workDaysGR = calculateWorkDays(mappedRow['GR Date TMR'], mappedRow['Entry Date'], []);
+          mappedRow['Waktu GR 101'] = workDaysGR;
+          
+          if (workDaysGR === null) {
+              mappedRow['Status GR 101'] = '-';
+          } else {
+              mappedRow['Status GR 101'] = workDaysGR > 2 ? 'Late' : 'Ontime';
           }
           
           return mappedRow;
@@ -585,8 +596,7 @@ function App() {
         {/* Baris bawah untuk Score Card lainnya */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
           <ShippingScoreCard data={filteredData} />
-          {/* Ruang kosong untuk card selanjutnya di masa depan */}
-          <div></div>
+          <GRScoreCard data={filteredData} />
         </div>
 
         <DataTable data={filteredData} />

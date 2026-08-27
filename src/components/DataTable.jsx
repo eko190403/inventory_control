@@ -111,10 +111,16 @@ export default function DataTable({ data }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Qty TMR {renderSortIcon('Quantity TMR')}</div>
               </th>
               <th onClick={() => requestSort('Waktu Pengerjaan')} style={{ cursor: 'pointer', userSelect: 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Waktu (Hari) {renderSortIcon('Waktu Pengerjaan')}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Waktu Ship (Hari) {renderSortIcon('Waktu Pengerjaan')}</div>
               </th>
               <th onClick={() => requestSort('Status Shipping')} style={{ cursor: 'pointer', userSelect: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Status Shipping {renderSortIcon('Status Shipping')}</div>
+              </th>
+              <th onClick={() => requestSort('Waktu GR 101')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Waktu GR 101 (Hari) {renderSortIcon('Waktu GR 101')}</div>
+              </th>
+              <th onClick={() => requestSort('Status GR 101')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Status GR 101 {renderSortIcon('Status GR 101')}</div>
               </th>
               <th onClick={() => requestSort('JUMLAH GR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Jumlah GR {renderSortIcon('JUMLAH GR')}</div>
@@ -146,6 +152,14 @@ export default function DataTable({ data }) {
                     {row['Status Shipping'] !== '-' ? (
                       <span className={`badge ${row['Status Shipping'] === 'Ontime' ? 'success' : 'danger'}`}>
                         {row['Status Shipping']}
+                      </span>
+                    ) : '-'}
+                  </td>
+                  <td style={{ fontWeight: 600, textAlign: 'center' }}>{row['Waktu GR 101'] !== null ? row['Waktu GR 101'] : '-'}</td>
+                  <td>
+                    {row['Status GR 101'] !== '-' ? (
+                      <span className={`badge ${row['Status GR 101'] === 'Ontime' ? 'success' : 'danger'}`}>
+                        {row['Status GR 101']}
                       </span>
                     ) : '-'}
                   </td>
