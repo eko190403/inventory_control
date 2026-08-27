@@ -40,10 +40,10 @@ export default function SummaryCards({ data }) {
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Total Baris Inventory</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invSudahGRCount.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Baris</span>
+                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invSudahGRCount.toLocaleString('id-ID')}</strong>
                 </span>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invBelumGRCount.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Baris</span>
+                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invBelumGRCount.toLocaleString('id-ID')}</strong>
                 </span>
             </div>
           </div>
@@ -60,10 +60,10 @@ export default function SummaryCards({ data }) {
             <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Total Baris Expense (OB)</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expSudahGRCount.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Baris</span>
+                  Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expSudahGRCount.toLocaleString('id-ID')}</strong>
                 </span>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expBelumGRCount.toLocaleString('id-ID')}</strong> <span style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Baris</span>
+                  Belum GR: <strong style={{color: 'var(--status-warning)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expBelumGRCount.toLocaleString('id-ID')}</strong>
                 </span>
             </div>
           </div>
