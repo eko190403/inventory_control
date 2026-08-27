@@ -352,43 +352,6 @@ function App() {
     }
   };
 
-  const handleExport = () => {
-    if (!filteredData.length) {
-      alert("Tidak ada data untuk diekspor");
-      return;
-    }
-    
-    // Select specific columns in exact order
-    const exportData = filteredData.map(row => ({
-        'TMR Number': row['TMR Number'],
-        'Status TMR': (!row['Status TMR'] || row['Status TMR'] === 'null') ? '-' : row['Status TMR'],
-        'Destination': row['Destination'],
-        'Shipping Date': row['Shipping Date'],
-        'GR Date TMR': row['GR Date TMR'],
-        'Purchasing Document': row['Purchasing Document'],
-        'Item': row['Item'],
-        'Material': row['Material'],
-        'Short Text': row['Short Text'],
-        'Quantity TMR': row['Quantity TMR'],
-        'Material Document': row['Material Document'],
-        'Material Doc. Year': row['Material Doc. Year'],
-        'Material Doc.Item': row['Material Doc.Item'],
-        'Storage Location': row['Storage Location'],
-        'Movement Type': row['Movement Type'],
-        'QTY GR': row['QTY GR'],
-        'Posting Date': row['Posting Date'],
-        'Entry Date': row['Entry Date'],
-        'Matl.Group': row['Matl.Group'],
-        'JUMLAH GR': row['JUMLAH GR'],
-        'Belum GR': row['Belum GR']
-    }));
-    
-    const ws = utils.json_to_sheet(exportData);
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, ws, "Data Olahan");
-    writeFile(wb, "Data_Hasil_Olahan_TMR.xlsx");
-  };
-
   const filteredData = useMemo(() => {
     if (!data.length) return [];
     
@@ -509,16 +472,6 @@ function App() {
           >
             <UploadCloud size={18} />
             <span>Upload Data</span>
-          </button>
-
-          <button 
-            className="btn"
-            style={{ background: 'var(--brand-blue)', color: '#fff', border: 'none', marginLeft: '0.5rem' }}
-            onClick={handleExport}
-            disabled={!filteredData.length}
-          >
-            <DownloadCloud size={18} />
-            <span>Export Data</span>
           </button>
 
           <button 

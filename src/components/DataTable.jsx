@@ -40,6 +40,10 @@ export default function DataTable({ data }) {
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
+  const totalItemCount = useMemo(() => {
+    return filteredData.filter(row => row['Item'] && row['Item'] !== '-' && row['Item'] !== 'null').length;
+  }, [filteredData]);
+
   const currentData = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
     return filteredData.slice(start, start + rowsPerPage);
@@ -74,7 +78,7 @@ export default function DataTable({ data }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.5rem' }}>
           <Database className="text-gradient" />
-          Data Records
+          Data Records <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>({totalItemCount.toLocaleString('id-ID')} Total Item)</span>
         </h2>
 
         <div className="controls-bar">
