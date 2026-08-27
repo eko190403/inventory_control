@@ -29,32 +29,32 @@ export default function ShippingScoreCard({ data }) {
   const totalScored = stats.lateCount + stats.ontimeCount;
 
   return (
-    <div className="glass-card" style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div className="glass-card" style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.25rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <div className="icon-container" style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', width: '48px', height: '48px' }}>
-          <Truck size={24} />
+        <div className="icon-container" style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', width: '40px', height: '40px' }}>
+          <Truck size={20} />
         </div>
         <div>
-          <h3 style={{ color: 'var(--text-primary)', fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>Status Shipping Date TMR</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>Total Baris Data berdasarkan Waktu Pengerjaan</p>
+          <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>Status Shipping Date TMR</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>Berdasarkan Waktu Pengerjaan</p>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', alignItems: 'center' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', alignItems: 'center' }}>
         {/* Texts */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-dark)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-            <span style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>Late (&gt; 2 hari)</span>
-            <strong style={{ color: 'var(--danger)', fontSize: '1.5rem' }}>{stats.lateCount.toLocaleString('id-ID')}</strong>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-dark)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>Late (&gt;2h)</span>
+            <strong style={{ color: 'var(--danger)', fontSize: '1.25rem' }}>{stats.lateCount.toLocaleString('id-ID')}</strong>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-dark)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-            <span style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>Ontime (&le; 2 hari)</span>
-            <strong style={{ color: 'var(--status-success)', fontSize: '1.5rem' }}>{stats.ontimeCount.toLocaleString('id-ID')}</strong>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-dark)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>Ontime (&le;2h)</span>
+            <strong style={{ color: 'var(--status-success)', fontSize: '1.25rem' }}>{stats.ontimeCount.toLocaleString('id-ID')}</strong>
           </div>
         </div>
 
         {/* Chart */}
-        <div style={{ height: '220px', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+        <div style={{ height: '160px', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
           {totalScored > 0 ? (
             <>
               <ResponsiveContainer width="100%" height="100%">
@@ -63,8 +63,8 @@ export default function ShippingScoreCard({ data }) {
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    innerRadius={50}
+                    outerRadius={65}
                     paddingAngle={5}
                     dataKey="value"
                     stroke="none"

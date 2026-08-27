@@ -580,10 +580,15 @@ function App() {
       </header>
 
       <main>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <ShippingScoreCard data={filteredData} />
-        </div>
         <SummaryCards data={filteredData} />
+        
+        {/* Baris bawah untuk Score Card lainnya */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+          <ShippingScoreCard data={filteredData} />
+          {/* Ruang kosong untuk card selanjutnya di masa depan */}
+          <div></div>
+        </div>
+
         <DataTable data={filteredData} />
       </main>
     </div>
