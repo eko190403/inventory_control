@@ -454,7 +454,7 @@ function App() {
       <header className="app-header">
         <div>
           <h1 className="app-title text-gradient" style={{ marginBottom: '0.25rem' }}>TMR Monitoring Dashboard</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Transfer Manifest Report & Goods Receipt Monitoring</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Transfer Manifest Report</p>
         </div>
         
         <div className="toolbar glass-panel">

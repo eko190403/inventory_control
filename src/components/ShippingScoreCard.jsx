@@ -35,7 +35,7 @@ export default function ShippingScoreCard({ data }) {
           <Truck size={20} />
         </div>
         <div>
-          <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>Status Shipping Date TMR</h3>
+          <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>Shipping Date TMR</h3>
         </div>
       </div>
 
