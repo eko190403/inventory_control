@@ -37,7 +37,7 @@ export default function SummaryCards({ data }) {
         <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '100px', height: '100px', background: 'var(--brand-purple)', filter: 'blur(60px)', opacity: 0.15, borderRadius: '50%' }}></div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
           <div>
-            <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Total Baris Inventory</h3>
+            <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Inventory</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
                   Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.invSudahGRCount.toLocaleString('id-ID')}</strong>
@@ -57,7 +57,7 @@ export default function SummaryCards({ data }) {
         <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '100px', height: '100px', background: 'var(--brand-blue)', filter: 'blur(60px)', opacity: 0.15, borderRadius: '50%' }}></div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
           <div>
-            <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Total Baris Expense (OB)</h3>
+            <h3 style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Expense (OB)</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>
                   Sudah GR: <strong style={{color: 'var(--status-success)', fontSize: '1.75rem', marginLeft: '0.5rem'}}>{stats.expSudahGRCount.toLocaleString('id-ID')}</strong>
