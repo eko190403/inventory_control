@@ -29,14 +29,13 @@ export default function ShippingScoreCard({ data }) {
   const totalScored = stats.lateCount + stats.ontimeCount;
 
   return (
-    <div className="glass-card" style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.25rem' }}>
+    <div className="glass-card" style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.25rem', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div className="icon-container" style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', width: '40px', height: '40px' }}>
           <Truck size={20} />
         </div>
         <div>
           <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>Status Shipping Date TMR</h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: 0 }}>Berdasarkan Waktu Pengerjaan</p>
         </div>
       </div>
 
