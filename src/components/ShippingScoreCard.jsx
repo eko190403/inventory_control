@@ -27,6 +27,8 @@ export default function ShippingScoreCard({ data }) {
   ];
 
   const totalScored = stats.lateCount + stats.ontimeCount;
+  const latePercent = totalScored > 0 ? ((stats.lateCount / totalScored) * 100).toFixed(0) + '%' : '0%';
+  const ontimePercent = totalScored > 0 ? ((stats.ontimeCount / totalScored) * 100).toFixed(0) + '%' : '0%';
 
   return (
     <div className="glass-card" style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.25rem', height: '100%', boxSizing: 'border-box' }}>
@@ -43,11 +45,17 @@ export default function ShippingScoreCard({ data }) {
         {/* Texts */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-dark)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-            <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>Late (&gt;2h)</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>Late (&gt;2h)</span>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--danger)', background: 'var(--status-danger-bg)', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{latePercent}</span>
+            </div>
             <strong style={{ color: 'var(--danger)', fontSize: '1.25rem' }}>{stats.lateCount.toLocaleString('id-ID')}</strong>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-dark)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-            <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>Ontime (&le;2h)</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>Ontime (&le;2h)</span>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--status-success)', background: 'var(--status-success-bg)', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>{ontimePercent}</span>
+            </div>
             <strong style={{ color: 'var(--status-success)', fontSize: '1.25rem' }}>{stats.ontimeCount.toLocaleString('id-ID')}</strong>
           </div>
         </div>
@@ -67,18 +75,6 @@ export default function ShippingScoreCard({ data }) {
                     paddingAngle={5}
                     dataKey="value"
                     stroke="none"
-                    labelLine={false}
-                    label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-                      if (percent === 0) return null;
-                      const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                      const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
-                      const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
-                      return (
-                        <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize="0.75rem" fontWeight="bold">
-                          {`${(percent * 100).toFixed(0)}%`}
-                        </text>
-                      );
-                    }}
                   >
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
