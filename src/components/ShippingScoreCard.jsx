@@ -85,7 +85,10 @@ export default function ShippingScoreCard({ data }) {
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value) => [`${value.toLocaleString('id-ID')} Baris`, 'Total']}
+                    formatter={(value) => {
+                      const percent = totalScored > 0 ? (value / totalScored * 100).toFixed(0) : 0;
+                      return [`${percent}%`, 'Persentase'];
+                    }}
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
                   />
                   <Legend verticalAlign="bottom" height={36} iconType="circle" />
