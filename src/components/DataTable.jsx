@@ -110,6 +110,12 @@ export default function DataTable({ data }) {
               <th onClick={() => requestSort('Quantity TMR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Qty TMR {renderSortIcon('Quantity TMR')}</div>
               </th>
+              <th onClick={() => requestSort('Waktu Pengerjaan')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Waktu (Hari) {renderSortIcon('Waktu Pengerjaan')}</div>
+              </th>
+              <th onClick={() => requestSort('Status Shipping')} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Status Shipping {renderSortIcon('Status Shipping')}</div>
+              </th>
               <th onClick={() => requestSort('JUMLAH GR')} style={{ cursor: 'pointer', userSelect: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>Jumlah GR {renderSortIcon('JUMLAH GR')}</div>
               </th>
@@ -135,6 +141,14 @@ export default function DataTable({ data }) {
                     {row['Short Text'] || '-'}
                   </td>
                   <td style={{ fontWeight: 600 }}>{row['Quantity TMR']}</td>
+                  <td style={{ fontWeight: 600, textAlign: 'center' }}>{row['Waktu Pengerjaan'] !== null ? row['Waktu Pengerjaan'] : '-'}</td>
+                  <td>
+                    {row['Status Shipping'] !== '-' ? (
+                      <span className={`badge ${row['Status Shipping'] === 'Ontime' ? 'success' : 'danger'}`}>
+                        {row['Status Shipping']}
+                      </span>
+                    ) : '-'}
+                  </td>
                   <td style={{ fontWeight: 600, color: 'var(--status-success)' }}>{row['JUMLAH GR']}</td>
                   <td style={{ fontWeight: 600, color: 'var(--status-warning)' }}>{row['Belum GR']}</td>
                   <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{row['Material Document'] || '-'}</td>

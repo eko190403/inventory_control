@@ -4,7 +4,9 @@ import { read, utils, writeFile } from 'xlsx';
 import { supabase } from './supabaseClient';
 
 import SummaryCards from './components/SummaryCards';
+import ShippingScoreCard from './components/ShippingScoreCard';
 import DataTable from './components/DataTable';
+import { calculateWorkDays } from './utils/dateUtils';
 
 function formatToDDMMYYYY(val) {
   if (!val || val === 'null' || val === '-') return '-';
@@ -127,7 +129,7 @@ function App() {
           const md = row.material_document;
           const isBelumGr = !md || md === 'null' || md === '0' || md === '';
           
-          return {
+          const mappedRow = {
             'TMR Number': row.tmr_number,
             'Status TMR': (!row.status_tmr || row.status_tmr === 'null') ? '-' : row.status_tmr,
             'Destination': row.destination_1,
@@ -155,6 +157,18 @@ function App() {
             'Destination.1': row.destination_1,
             'Matl. Group': row.material_type
           };
+          
+          // Calculate work days and status
+          const workDays = calculateWorkDays(mappedRow['Shipping Date'], mappedRow['GR Date TMR'], []);
+          mappedRow['Waktu Pengerjaan'] = workDays;
+          
+          if (workDays === null) {
+              mappedRow['Status Shipping'] = '-';
+          } else {
+              mappedRow['Status Shipping'] = workDays > 2 ? 'Late' : 'Ontime';
+          }
+          
+          return mappedRow;
         });
         
         setData(mappedData);
@@ -566,6 +580,9 @@ function App() {
       </header>
 
       <main>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+          <ShippingScoreCard data={filteredData} />
+        </div>
         <SummaryCards data={filteredData} />
         <DataTable data={filteredData} />
       </main>
