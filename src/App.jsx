@@ -558,7 +558,7 @@ function App() {
               className="input-group"
               style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
             >
-              <option value="">Semua Status GR</option>
+              <option value="">Status GR</option>
               <option value="SUDAH GR">Sudah GR</option>
               <option value="BELUM GR">Belum GR</option>
             </select>
@@ -570,7 +570,7 @@ function App() {
               className="input-group"
               style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
             >
-              <option value="">Semua Status TMR</option>
+              <option value="">Status TMR</option>
               {statusOptions.map(opt => (
                 <option key={opt} value={opt}>{opt}</option>
               ))}
@@ -583,19 +583,18 @@ function App() {
               className="input-group"
               style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none' }}
             >
-              <option value="">Semua Matl Group</option>
+              <option value="">Matl Group</option>
               <option value="Inventory">Inventory</option>
               <option value="Expense">Expense (OB)</option>
             </select>
 
-            {/* Destination Filter */}
             <select 
               value={destinationFilter} 
               onChange={e => setDestinationFilter(e.target.value)}
               className="input-group"
               style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none', maxWidth: '200px' }}
             >
-              <option value="">Semua Destination</option>
+              <option value="">Destination</option>
               {destinationOptions.map(opt => (
                 <option key={opt} value={opt}>{opt}</option>
               ))}
