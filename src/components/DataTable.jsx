@@ -41,7 +41,7 @@ export default function DataTable({ data }) {
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
   const totalItemCount = useMemo(() => {
-    return filteredData.filter(row => row['Item'] && row['Item'] !== '-' && row['Item'] !== 'null').length;
+    return filteredData.reduce((sum, row) => sum + (parseFloat(row['Item']) || 0), 0);
   }, [filteredData]);
 
   const currentData = useMemo(() => {
