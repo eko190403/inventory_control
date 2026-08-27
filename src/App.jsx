@@ -101,6 +101,7 @@ function App() {
   const [statusFilter, setStatusFilter] = useState('');
   const [matlGroupFilter, setMatlGroupFilter] = useState('');
   const [statusGrFilter, setStatusGrFilter] = useState('');
+  const [destinationFilter, setDestinationFilter] = useState('');
 
   useEffect(() => {
     const fetchFromSupabase = async () => {
@@ -445,14 +446,25 @@ function App() {
          }
       }
 
+      // Filter Destination
+      if (destinationFilter && item['Destination'] !== destinationFilter) {
+        valid = false;
+      }
+
       return valid;
     });
-  }, [data, startDate, endDate, statusFilter, matlGroupFilter, statusGrFilter]);
+  }, [data, startDate, endDate, statusFilter, matlGroupFilter, statusGrFilter, destinationFilter]);
   
   // Unique Options for Status TMR
   const statusOptions = useMemo(() => {
      const statuses = data.map(d => d['Status TMR']).filter(val => val && val !== '-');
      return [...new Set(statuses)];
+  }, [data]);
+
+  // Unique Options for Destination
+  const destinationOptions = useMemo(() => {
+     const dests = data.map(d => d['Destination']).filter(val => val && val !== '-' && val !== 'null' && val !== 'undefined');
+     return [...new Set(dests)].sort();
   }, [data]);
 
 
@@ -576,9 +588,22 @@ function App() {
               <option value="Expense">Expense (OB)</option>
             </select>
 
-            {(startDate || endDate || statusFilter || matlGroupFilter || statusGrFilter) && (
+            {/* Destination Filter */}
+            <select 
+              value={destinationFilter} 
+              onChange={e => setDestinationFilter(e.target.value)}
+              className="input-group"
+              style={{ background: '#F5F7FA', color: 'var(--text-primary)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.4rem', outline: 'none', maxWidth: '200px' }}
+            >
+              <option value="">Semua Destination</option>
+              {destinationOptions.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+
+            {(startDate || endDate || statusFilter || matlGroupFilter || statusGrFilter || destinationFilter) && (
               <button 
-                onClick={() => { setStartDate(''); setEndDate(''); setStatusFilter(''); setMatlGroupFilter(''); setStatusGrFilter(''); }}
+                onClick={() => { setStartDate(''); setEndDate(''); setStatusFilter(''); setMatlGroupFilter(''); setStatusGrFilter(''); setDestinationFilter(''); }}
                 className="icon-button danger"
                 title="Clear Filters"
                 style={{ padding: '0.4rem' }}
