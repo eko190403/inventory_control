@@ -75,7 +75,6 @@ export default function DataTable({ data }) {
         <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.5rem' }}>
           <Database className="text-gradient" />
           Data Records
-          <span className="badge neutral" style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }}>{filteredData.length.toLocaleString('id-ID')} Total</span>
         </h2>
 
         <div className="controls-bar">
