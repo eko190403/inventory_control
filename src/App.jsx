@@ -457,37 +457,10 @@ function App() {
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Transfer Manifest Report Monitoring</p>
         </div>
         
-        <div className="toolbar glass-panel">
-          {/* Upload Button */}
-          <input 
-            type="file" 
-            accept=".xlsx, .xls, .csv" 
-            style={{ display: 'none' }} 
-            ref={fileInputRef}
-            onChange={handleFileUpload}
-          />
-          <button 
-            className="btn btn-primary"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <UploadCloud size={18} />
-            <span>Upload Data</span>
-          </button>
-
-          <button 
-            className="btn"
-            style={{ marginLeft: '0.5rem' }}
-            onClick={handleResetData}
-            title="Hapus Semua Data"
-          >
-            <Trash2 size={18} />
-            <span>Reset</span>
-          </button>
-
-          <div style={{ width: '1px', height: '24px', background: 'var(--border-strong)', margin: '0 0.5rem' }}></div>
-
-          {/* Filters */}
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <div className="controls-bar" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
+          
+          {/* Filters (Left Side) */}
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', flex: 1 }}>
             {/* GR Date Range Filter */}
                         <div className="input-group date-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
@@ -563,6 +536,35 @@ function App() {
                 <X size={18} />
               </button>
             )}
+          </div>
+
+          {/* Action Buttons (Right Side, Blue, Spaced Away) */}
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+            <input 
+              type="file" 
+              accept=".xlsx, .xls, .csv" 
+              style={{ display: 'none' }} 
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+            />
+            <button 
+              className="btn"
+              style={{ background: 'var(--brand-blue)', color: '#fff', border: 'none' }}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <UploadCloud size={18} />
+              <span>Upload Data</span>
+            </button>
+
+            <button 
+              className="btn"
+              style={{ background: 'var(--brand-blue)', color: '#fff', border: 'none' }}
+              onClick={handleResetData}
+              title="Hapus Semua Data"
+            >
+              <Trash2 size={18} />
+              <span>Reset</span>
+            </button>
           </div>
         </div>
       </header>
